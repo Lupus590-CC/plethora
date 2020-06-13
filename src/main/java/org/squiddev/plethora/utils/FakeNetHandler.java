@@ -3,6 +3,7 @@ package org.squiddev.plethora.utils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.*;
+import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.network.play.client.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
@@ -11,12 +12,12 @@ import net.minecraftforge.common.util.FakePlayer;
 import javax.annotation.Nonnull;
 import javax.crypto.SecretKey;
 
-public class FakeNetHandler extends NetHandlerPlayServer {
+public class FakeNetHandler extends ServerPlayNetHandler {
 	public static class FakeNetworkManager extends NetworkManager {
 		private INetHandler handler;
 
 		public FakeNetworkManager() {
-			super(EnumPacketDirection.CLIENTBOUND);
+			super(PacketDirection.CLIENTBOUND);
 		}
 
 		@Override
@@ -24,7 +25,7 @@ public class FakeNetHandler extends NetHandlerPlayServer {
 		}
 
 		@Override
-		public void setConnectionState(@Nonnull EnumConnectionState state) {
+		public void setConnectionState(ProtocolType newState) {
 		}
 
 		@Override
@@ -38,10 +39,6 @@ public class FakeNetHandler extends NetHandlerPlayServer {
 		@Override
 		public void setNetHandler(INetHandler handler) {
 			this.handler = handler;
-		}
-
-		@Override
-		public void processReceivedPackets() {
 		}
 
 		@Override
@@ -96,11 +93,11 @@ public class FakeNetHandler extends NetHandlerPlayServer {
 	}
 
 	@Override
-	public void processInput(CPacketInput packet) {
+	public void processInput(CInputPacket packet) {
 	}
 
 	@Override
-	public void processPlayer(CPacketPlayer packet) {
+	public void processPlayer(CPlayerPacket packet) {
 	}
 
 	@Override
@@ -108,80 +105,79 @@ public class FakeNetHandler extends NetHandlerPlayServer {
 	}
 
 	@Override
-	public void processPlayerDigging(CPacketPlayerDigging packet) {
+	public void processPlayerDigging(CPlayerDiggingPacket packet) {
 	}
 
 	@Override
 	public void onDisconnect(@Nonnull ITextComponent chat) {
 	}
 
-	@Override
-	@SuppressWarnings("rawtypes")
-	public void sendPacket(@Nonnull final Packet packet) {
 
+	@Override
+	public void sendPacket(IPacket<?> packetIn) {
 	}
 
 	@Override
-	public void processHeldItemChange(CPacketHeldItemChange packet) {
+	public void processHeldItemChange(CHeldItemChangePacket packet) {
 	}
 
 	@Override
-	public void processChatMessage(@Nonnull CPacketChatMessage packet) {
+	public void processChatMessage(@Nonnull CChatMessagePacket packet) {
 	}
 
 	@Override
-	public void processEntityAction(CPacketEntityAction packet) {
+	public void processEntityAction(CEntityActionPacket packet) {
 	}
 
 	@Override
-	public void processUseEntity(CPacketUseEntity packet) {
+	public void processUseEntity(CUseEntityPacket packet) {
 	}
 
 	@Override
-	public void processClientStatus(CPacketClientStatus packet) {
+	public void processClientStatus(CClientStatusPacket packet) {
 	}
 
 	@Override
-	public void processCloseWindow(@Nonnull CPacketCloseWindow packet) {
+	public void processCloseWindow(@Nonnull CCloseWindowPacket packet) {
 	}
 
 	@Override
-	public void processClickWindow(CPacketClickWindow packet) {
+	public void processClickWindow(CClickWindowPacket packet) {
 	}
 
 	@Override
-	public void processEnchantItem(CPacketEnchantItem packet) {
+	public void processEnchantItem(CEnchantItemPacket packet) {
 	}
 
 	@Override
-	public void processCreativeInventoryAction(@Nonnull CPacketCreativeInventoryAction packet) {
+	public void processCreativeInventoryAction(@Nonnull CCreativeInventoryActionPacket packet) {
 	}
 
 	@Override
-	public void processConfirmTransaction(@Nonnull CPacketConfirmTransaction packet) {
+	public void processConfirmTransaction(@Nonnull CConfirmTransactionPacket packet) {
 	}
 
 	@Override
-	public void processUpdateSign(CPacketUpdateSign packet) {
+	public void processUpdateSign(CUpdateSignPacket packet) {
 	}
 
 	@Override
-	public void processKeepAlive(@Nonnull CPacketKeepAlive packet) {
+	public void processKeepAlive(@Nonnull CKeepAlivePacket packet) {
 	}
 
 	@Override
-	public void processPlayerAbilities(CPacketPlayerAbilities packet) {
+	public void processPlayerAbilities(CPlayerAbilitiesPacket packet) {
 	}
 
 	@Override
-	public void processTabComplete(CPacketTabComplete packet) {
+	public void processTabComplete(CTabCompletePacket packet) {
 	}
 
 	@Override
-	public void processClientSettings(@Nonnull CPacketClientSettings packet) {
+	public void processClientSettings(@Nonnull CClientSettingsPacket packet) {
 	}
 
 	@Override
-	public void processCustomPayload(CPacketCustomPayload packetIn) {
+	public void processCustomPayload(CCustomPayloadPacket packetIn) {
 	}
 }

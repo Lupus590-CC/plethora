@@ -1,6 +1,6 @@
 package org.squiddev.plethora.api.method;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nonnull;
@@ -20,5 +20,5 @@ public interface IMethodRegistry {
 	 * @return The associated cost handler
 	 */
 	@Nonnull
-	ICostHandler getCostHandler(@Nonnull ICapabilityProvider object, @Nullable EnumFacing side);
+	ICostHandler getCostHandler(@Nonnull ICapabilityProvider object, @Nullable Direction side);
 }

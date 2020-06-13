@@ -15,7 +15,7 @@ import hellfirepvp.astralsorcery.common.tile.network.TileCollectorCrystal;
 import hellfirepvp.astralsorcery.common.tile.network.TileCrystalLens;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import org.squiddev.plethora.api.Injects;
 import org.squiddev.plethora.api.meta.BaseMetaProvider;
@@ -188,7 +188,7 @@ public final class MetaBlocks {
 		@Nonnull
 		@Override
 		public Map<String, ?> getMeta(@Nonnull TileIlluminator context) {
-			NBTTagCompound nbt = new NBTTagCompound();
+			CompoundNBT nbt = new CompoundNBT();
 			context.writeCustomNBT(nbt);
 
 			if (!nbt.hasKey("wandColor", Constants.NBT.TAG_INT)) return Collections.emptyMap();

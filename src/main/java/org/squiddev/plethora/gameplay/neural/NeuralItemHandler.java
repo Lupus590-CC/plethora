@@ -1,7 +1,7 @@
 package org.squiddev.plethora.gameplay.neural;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -51,8 +51,8 @@ public class NeuralItemHandler implements IItemHandlerModifiable {
 	public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
 		validateSlotIndex(slot);
 
-		NBTTagCompound tag = ItemBase.getTag(this.stack);
-		NBTTagCompound items = getItems(tag);
+		CompoundNBT tag = ItemBase.getTag(this.stack);
+		CompoundNBT items = getItems(tag);
 		if (stack.isEmpty()) {
 			items.removeTag("item" + slot);
 		} else {
@@ -67,8 +67,8 @@ public class NeuralItemHandler implements IItemHandlerModifiable {
 	public ItemStack getStackInSlot(int slot) {
 		validateSlotIndex(slot);
 
-		NBTTagCompound tag = ItemBase.getTag(stack);
-		NBTTagCompound items = getItems(tag);
+		CompoundNBT tag = ItemBase.getTag(stack);
+		CompoundNBT items = getItems(tag);
 		return items.hasKey("item" + slot, Constants.NBT.TAG_COMPOUND) ? new ItemStack(items.getCompoundTag("item" + slot)) : ItemStack.EMPTY;
 	}
 
@@ -145,12 +145,12 @@ public class NeuralItemHandler implements IItemHandlerModifiable {
 		return 1;
 	}
 
-	private static NBTTagCompound getItems(NBTTagCompound tag) {
-		NBTTagCompound items;
+	private static CompoundNBT getItems(CompoundNBT tag) {
+		CompoundNBT items;
 		if (tag.hasKey(ITEMS, Constants.NBT.TAG_COMPOUND)) {
 			items = tag.getCompoundTag(ITEMS);
 		} else {
-			tag.setTag(ITEMS, items = new NBTTagCompound());
+			tag.setTag(ITEMS, items = new CompoundNBT());
 		}
 
 		return items;

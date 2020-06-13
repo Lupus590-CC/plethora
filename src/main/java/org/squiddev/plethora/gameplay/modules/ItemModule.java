@@ -1,16 +1,16 @@
 package org.squiddev.plethora.gameplay.modules;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
@@ -22,8 +22,8 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.Constants;
 import org.squiddev.plethora.api.PlethoraAPI;
@@ -103,7 +103,7 @@ public final class ItemModule extends ItemBase {
 			case CHAT_ID:
 				if (!world.isRemote) {
 					if (player.isSneaking() && !player.getGameProfile().getName().startsWith("[") && player.getGameProfile().getId() != null) {
-						NBTTagCompound tag = getTag(stack);
+						CompoundNBT tag = getTag(stack);
 
 						if (player.getGameProfile().equals(getProfile(stack))) {
 							// Remove the binding if we're already bound
@@ -149,7 +149,7 @@ public final class ItemModule extends ItemBase {
 	}
 
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase player, int remaining) {
+	public void onPlayerStoppedUsing(ItemStack stack, World world, LivingEntity player, int remaining) {
 		if (world.isRemote) return;
 		if (isBlacklisted(stack)) return;
 
@@ -192,13 +192,13 @@ public final class ItemModule extends ItemBase {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public boolean hasEffect(ItemStack stack) {
 		return super.hasEffect(stack) || getLevel(stack) > 0;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> out, ITooltipFlag flag) {
 		super.addInformation(stack, world, out, flag);
 
@@ -229,7 +229,7 @@ public final class ItemModule extends ItemBase {
 
 	@Nonnull
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound tag) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT tag) {
 		return new ItemModuleHandler(stack);
 	}
 
@@ -243,7 +243,7 @@ public final class ItemModule extends ItemBase {
 		}
 
 		@Override
-		public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing enumFacing) {
+		public boolean hasCapability(@Nonnull Capability<?> capability, Direction direction) {
 			if (stack.getItemDamage() >= MODULES) return false;
 
 			if (capability == Constants.MODULE_HANDLER_CAPABILITY) return true;
@@ -256,7 +256,7 @@ public final class ItemModule extends ItemBase {
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing enumFacing) {
+		public <T> T getCapability(@Nonnull Capability<T> capability, Direction direction) {
 			if (stack.getItemDamage() >= MODULES) return null;
 
 			if (capability == Constants.MODULE_HANDLER_CAPABILITY) return (T) this;
@@ -355,7 +355,7 @@ public final class ItemModule extends ItemBase {
 
 		@Nonnull
 		@Override
-		@SideOnly(Side.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		public Pair<IBakedModel, Matrix4f> getModel(float delta) {
 			Matrix4f matrix = new Matrix4f();
 			matrix.setIdentity();
@@ -375,14 +375,14 @@ public final class ItemModule extends ItemBase {
 	}
 
 	public static GameProfile getProfile(ItemStack stack) {
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		return tag != null && tag.hasKey("id_lower", NBT.TAG_ANY_NUMERIC)
 			? new GameProfile(new UUID(tag.getLong("id_upper"), tag.getLong("id_lower")), tag.getString("bound_name"))
 			: null;
 	}
 
 	private static Entity getEntity(ItemStack stack) {
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		if (tag != null && tag.hasKey("id_lower", NBT.TAG_ANY_NUMERIC)) {
 			FMLCommonHandler handler = FMLCommonHandler.instance();
 			if (handler == null) return null;
@@ -396,12 +396,12 @@ public final class ItemModule extends ItemBase {
 	}
 
 	private static String getEntityName(ItemStack stack) {
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		return tag != null && tag.hasKey("bound_name", NBT.TAG_STRING) ? tag.getString("bound_name") : null;
 	}
 
 	public static int getLevel(ItemStack stack) {
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		return tag != null && tag.hasKey("level", NBT.TAG_ANY_NUMERIC) ? tag.getInteger("level") : 0;
 	}
 
@@ -424,7 +424,7 @@ public final class ItemModule extends ItemBase {
 		float motionY = -MathHelper.sin(pitch / 180.0f * (float) Math.PI);
 
 		power /= MathHelper.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
-		if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isElytraFlying()) {
+		if (entity instanceof LivingEntity && ((LivingEntity) entity).isElytraFlying()) {
 			power *= ConfigGameplay.Kinetic.launchElytraScale;
 		}
 

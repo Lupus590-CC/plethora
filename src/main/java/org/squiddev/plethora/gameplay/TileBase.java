@@ -2,17 +2,17 @@ package org.squiddev.plethora.gameplay;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +25,7 @@ public abstract class TileBase extends TileEntity {
 	 *
 	 * @param tag The data to send
 	 */
-	protected void writeDescription(NBTTagCompound tag) {
+	protected void writeDescription(CompoundNBT tag) {
 	}
 
 	/**
@@ -33,32 +33,32 @@ public abstract class TileBase extends TileEntity {
 	 *
 	 * @param tag The data to read
 	 */
-	protected void readDescription(NBTTagCompound tag) {
+	protected void readDescription(CompoundNBT tag) {
 	}
 
 	@Nonnull
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound tag = super.getUpdateTag();
+	public CompoundNBT getUpdateTag() {
+		CompoundNBT tag = super.getUpdateTag();
 		writeDescription(tag);
 		return tag;
 	}
 
 	@Override
-	public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
+	public void handleUpdateTag(@Nonnull CompoundNBT tag) {
 		super.handleUpdateTag(tag);
 		readDescription(tag);
 	}
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound tag = new NBTTagCompound();
+		CompoundNBT tag = new CompoundNBT();
 		writeDescription(tag);
 		return new SPacketUpdateTileEntity(getPos(), 0, tag);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public final void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 		readDescription(packet.getNbtCompound());
 	}
@@ -84,7 +84,7 @@ public abstract class TileBase extends TileEntity {
 	 * @param hit    The position the hit occurred
 	 * @return If the event succeeded
 	 */
-	public boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, Vec3d hit) {
+	public boolean onActivated(EntityPlayer player, EnumHand hand, Direction side, Vec3d hit) {
 		return false;
 	}
 

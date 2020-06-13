@@ -5,7 +5,7 @@ import com.setycz.chickens.config.ConfigHandler;
 import com.setycz.chickens.entity.EntityChickensChicken;
 import com.setycz.chickens.registry.ChickensRegistry;
 import com.setycz.chickens.registry.ChickensRegistryItem;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import org.squiddev.plethora.api.Injects;
 import org.squiddev.plethora.api.meta.BaseMetaProvider;
 import org.squiddev.plethora.api.meta.IMetaProvider;
@@ -45,7 +45,7 @@ public final class MetaChickens {
 				out.put("strength", chicken.getStrength());
 			}
 
-			NBTTagCompound nbt = new NBTTagCompound();
+			CompoundNBT nbt = new CompoundNBT();
 			chicken.writeEntityToNBT(nbt);
 			String chickenType = nbt.getString("Type");
 			out.put("type", chickenType);

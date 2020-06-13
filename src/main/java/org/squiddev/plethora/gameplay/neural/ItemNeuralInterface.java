@@ -16,13 +16,13 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -36,8 +36,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.squiddev.plethora.gameplay.ItemBase;
@@ -77,7 +77,7 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 	}
 
 	@Override
-	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity, EnumHand hand) {
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, LivingEntity entity, EnumHand hand) {
 		if (!NeuralRegistry.instance.canEquip(entity)) return false;
 
 		if (entity.getItemStackFromSlot(NeuralHelpers.ARMOR_SLOT).isEmpty() && stack.getCount() == 1) {
@@ -108,8 +108,8 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 		ItemStack stack = player.getHeldItem(hand);
 		RayTraceResult hit = PlayerHelpers.findHitGuess(player);
 		Entity entity = hit.entityHit;
-		if (hit.typeOfHit == RayTraceResult.Type.ENTITY && !(entity instanceof EntityPlayer) && entity instanceof EntityLivingBase) {
-			if (((EntityLivingBase) entity).getItemStackFromSlot(NeuralHelpers.ARMOR_SLOT).isEmpty() && stack.getCount() == 1) {
+		if (hit.typeOfHit == RayTraceResult.Type.ENTITY && !(entity instanceof EntityPlayer) && entity instanceof LivingEntity) {
+			if (((LivingEntity) entity).getItemStackFromSlot(NeuralHelpers.ARMOR_SLOT).isEmpty() && stack.getCount() == 1) {
 				return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 			}
 		}
@@ -131,11 +131,11 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 		return super.onItemRightClick(world, player, hand);
 	}
 
-	private static void onUpdate(ItemStack stack, TinySlot inventory, EntityLivingBase player, boolean forceActive) {
+	private static void onUpdate(ItemStack stack, TinySlot inventory, LivingEntity player, boolean forceActive) {
 		if (player.getEntityWorld().isRemote) {
 			if (forceActive && player instanceof EntityPlayer) ItemComputerHandler.getClient(stack);
 		} else {
-			NBTTagCompound tag = ItemBase.getTag(stack);
+			CompoundNBT tag = ItemBase.getTag(stack);
 			NeuralComputer neural;
 
 			// Fetch computer
@@ -188,7 +188,7 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 
 	@Nonnull
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound oldCapNbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT oldCapNbt) {
 		return new InvProvider(stack);
 	}
 
@@ -221,13 +221,13 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 
 	@Override
 	public int getComputerID(@Nonnull ItemStack stack) {
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		return tag != null && tag.hasKey(COMPUTER_ID) ? tag.getInteger(COMPUTER_ID) : -1;
 	}
 
 	@Override
 	public String getLabel(@Nonnull ItemStack stack) {
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		return stack.hasDisplayName() ? stack.getDisplayName() : null;
 	}
 
@@ -249,7 +249,7 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 
 	@Override
 	@Optional.Method(modid = Baubles.MODID)
-	public void onWornTick(ItemStack stack, EntityLivingBase player) {
+	public void onWornTick(ItemStack stack, LivingEntity player) {
 		if (!(player instanceof EntityPlayer)) return;
 
 		IBaublesItemHandler handler = BaublesApi.getBaublesHandler((EntityPlayer) player);
@@ -263,36 +263,36 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 
 	@Override
 	@Optional.Method(modid = Baubles.MODID)
-	public void onEquipped(ItemStack stack, EntityLivingBase player) {
+	public void onEquipped(ItemStack stack, LivingEntity player) {
 	}
 
 	@Override
 	@Optional.Method(modid = Baubles.MODID)
-	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
+	public void onUnequipped(ItemStack stack, LivingEntity player) {
 	}
 
 	@Override
 	@Optional.Method(modid = Baubles.MODID)
-	public boolean canEquip(ItemStack stack, EntityLivingBase player) {
+	public boolean canEquip(ItemStack stack, LivingEntity player) {
 		return true;
 	}
 
 	@Override
 	@Optional.Method(modid = Baubles.MODID)
-	public boolean canUnequip(ItemStack stack, EntityLivingBase player) {
+	public boolean canUnequip(ItemStack stack, LivingEntity player) {
 		return true;
 	}
 
 	@Override
 	@Optional.Method(modid = Baubles.MODID)
-	public boolean willAutoSync(ItemStack itemstack, EntityLivingBase player) {
+	public boolean willAutoSync(ItemStack itemstack, LivingEntity player) {
 		return false;
 	}
 
 	@Nonnull
 	@Override
 	public ItemStack getCosmeticItem(@Nonnull ItemStack stack) {
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		return tag != null && tag.hasKey("cosmetic", Constants.NBT.TAG_COMPOUND)
 			? new ItemStack(tag.getCompoundTag("cosmetic"))
 			: ItemStack.EMPTY;
@@ -300,8 +300,8 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 
 	@Override
 	public void setCosmeticItem(@Nonnull ItemStack stack, @Nonnull ItemStack cosmetic) {
-		NBTTagCompound tag = stack.getTagCompound();
-		if (tag == null) stack.setTagCompound(tag = new NBTTagCompound());
+		CompoundNBT tag = stack.getTagCompound();
+		if (tag == null) stack.setTagCompound(tag = new CompoundNBT());
 
 		if (cosmetic.isEmpty()) {
 			tag.removeTag("cosmetic");
@@ -318,13 +318,13 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 		}
 
 		@Override
-		public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
+		public boolean hasCapability(@Nonnull Capability<?> capability, Direction facing) {
 			return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 		}
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+		public <T> T getCapability(@Nonnull Capability<T> capability, Direction facing) {
 			if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 				return (T) inv;
 			} else {
@@ -335,7 +335,7 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 
 	//region Armor stuff
 	@Override
-	public ArmorProperties getProperties(EntityLivingBase entityLivingBase, @Nonnull ItemStack itemStack, DamageSource damageSource, double v, int i) {
+	public ArmorProperties getProperties(LivingEntity LivingEntity, @Nonnull ItemStack itemStack, DamageSource damageSource, double v, int i) {
 		return FAKE_PROPERTIES;
 	}
 
@@ -345,16 +345,16 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 	}
 
 	@Override
-	public void damageArmor(EntityLivingBase entityLivingBase, @Nonnull ItemStack itemStack, DamageSource damageSource, int damage, int slot) {
+	public void damageArmor(LivingEntity LivingEntity, @Nonnull ItemStack itemStack, DamageSource damageSource, int damage, int slot) {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> out, ITooltipFlag flag) {
 		super.addInformation(stack, world, out, flag);
 		out.add(Helpers.translateToLocal(getTranslationKey(stack) + ".desc"));
 
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		if (flag.isAdvanced()) {
 			if (tag != null && tag.hasKey(COMPUTER_ID)) {
 				out.add("Computer ID " + tag.getInteger(COMPUTER_ID));
@@ -380,18 +380,18 @@ public class ItemNeuralInterface extends ItemArmor implements ISpecialArmor, ICo
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int um1, boolean um2) {
 		super.onUpdate(stack, world, entity, um1, um2);
-		if (entity instanceof EntityLivingBase) {
+		if (entity instanceof LivingEntity) {
 			TinySlot slot = entity instanceof EntityPlayer
 				? new TinySlot.InventorySlot(stack, ((EntityPlayer) entity).inventory)
 				: new TinySlot(stack);
-			onUpdate(stack, slot, (EntityLivingBase) entity, false);
+			onUpdate(stack, slot, (LivingEntity) entity, false);
 		}
 	}
 
 	@Nonnull
 	@Override
-	@SideOnly(Side.CLIENT)
-	public ModelBiped getArmorModel(EntityLivingBase entity, ItemStack stack, EntityEquipmentSlot slot, ModelBiped existing) {
+	@OnlyIn(Dist.CLIENT)
+	public ModelBiped getArmorModel(LivingEntity entity, ItemStack stack, EntityEquipmentSlot slot, ModelBiped existing) {
 		return ModelInterface.getNormal();
 	}
 

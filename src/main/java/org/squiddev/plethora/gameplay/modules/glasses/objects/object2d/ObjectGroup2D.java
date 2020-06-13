@@ -4,8 +4,8 @@ import com.google.common.base.Objects;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.gameplay.modules.glasses.BaseObject;
 import org.squiddev.plethora.gameplay.modules.glasses.CanvasClient;
 import org.squiddev.plethora.gameplay.modules.glasses.objects.ObjectGroup;
@@ -47,7 +47,7 @@ public class ObjectGroup2D extends BaseObject implements ObjectGroup.Group2D, Po
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void draw(CanvasClient canvas) {
 		IntSet children = canvas.getChildren(id());
 		if (children == null) return;

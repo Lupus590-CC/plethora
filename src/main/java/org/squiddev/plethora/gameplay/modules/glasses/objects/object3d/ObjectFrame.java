@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 import org.squiddev.plethora.gameplay.client.FramebufferGlasses;
 import org.squiddev.plethora.gameplay.client.OpenGlHelper;
@@ -95,7 +95,7 @@ public class ObjectFrame extends BaseObject implements ObjectGroup.Frame2D, Posi
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void draw(CanvasClient canvas) {
 		IntSet children = canvas.getChildren(id());
 		if (children == null) return;

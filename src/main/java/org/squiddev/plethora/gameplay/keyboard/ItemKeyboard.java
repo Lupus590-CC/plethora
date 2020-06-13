@@ -12,7 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -24,8 +24,8 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.api.Constants;
 import org.squiddev.plethora.api.IAttachable;
 import org.squiddev.plethora.api.method.IContextBuilder;
@@ -53,23 +53,23 @@ public class ItemKeyboard extends ItemBase {
 
 	@Nonnull
 	@Override
-	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, EnumHand hand) {
 		return onItemUse(player.getHeldItem(hand), world, player);
 	}
 
 	@Nonnull
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
 		if (player.isSneaking()) {
 			if (world.isRemote) return EnumActionResult.SUCCESS;
 
 			TileEntity tile = world.getTileEntity(pos);
 			ItemStack stack = player.getHeldItem(hand);
-			NBTTagCompound tag = stack.getTagCompound();
+			CompoundNBT tag = stack.getTagCompound();
 			if (tile instanceof TileComputerBase) {
 				if (!((TileGeneric) tile).isUsable(player, true)) return EnumActionResult.FAIL;
 
-				if (tag == null) stack.setTagCompound(tag = new NBTTagCompound());
+				if (tag == null) stack.setTagCompound(tag = new CompoundNBT());
 
 				tag.setInteger("x", pos.getX());
 				tag.setInteger("y", pos.getY());
@@ -109,7 +109,7 @@ public class ItemKeyboard extends ItemBase {
 		super.onUpdate(stack, world, entity, itemSlot, isSelected);
 		if (world.isRemote) return;
 
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		if (tag != null && tag.hasKey("x", NBT.TAG_ANY_NUMERIC)) {
 			int session = ComputerCraft.serverComputerRegistry.getSessionID();
 			boolean dirty = false;
@@ -145,7 +145,7 @@ public class ItemKeyboard extends ItemBase {
 		if (world.isRemote) return EnumActionResult.SUCCESS;
 
 		ServerComputer computer;
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		if (tag != null && tag.hasKey("x", NBT.TAG_ANY_NUMERIC)) {
 			computer = getBlockComputer(ComputerCraft.serverComputerRegistry, tag);
 		} else {
@@ -168,7 +168,7 @@ public class ItemKeyboard extends ItemBase {
 		return ActionResult.newResult(result, stack);
 	}
 
-	private static <T extends IComputer> T getBlockComputer(ComputerRegistry<T> registry, NBTTagCompound tag) {
+	private static <T extends IComputer> T getBlockComputer(ComputerRegistry<T> registry, CompoundNBT tag) {
 		if (!tag.hasKey(SESSION_ID, NBT.TAG_ANY_NUMERIC) || !tag.hasKey(INSTANCE_ID, NBT.TAG_ANY_NUMERIC)) return null;
 
 		int instance = tag.getInteger(INSTANCE_ID);
@@ -176,11 +176,11 @@ public class ItemKeyboard extends ItemBase {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> out, ITooltipFlag flag) {
 		super.addInformation(stack, world, out, flag);
 
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		if (tag != null && tag.hasKey("x", NBT.TAG_ANY_NUMERIC)) {
 			ClientComputer computer = getBlockComputer(ComputerCraft.clientComputerRegistry, tag);
 			String position = tag.getInteger("x") + ", " + tag.getInteger("y") + ", " + tag.getInteger("z");
@@ -190,7 +190,7 @@ public class ItemKeyboard extends ItemBase {
 
 	@Nonnull
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT nbt) {
 		return KeyboardModule.INSTANCE;
 	}
 
@@ -212,13 +212,13 @@ public class ItemKeyboard extends ItemBase {
 		}
 
 		@Override
-		public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
+		public boolean hasCapability(@Nonnull Capability<?> capability, Direction facing) {
 			return capability == Constants.MODULE_HANDLER_CAPABILITY;
 		}
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+		public <T> T getCapability(@Nonnull Capability<T> capability, Direction facing) {
 			return capability == Constants.MODULE_HANDLER_CAPABILITY ? (T) this : null;
 		}
 

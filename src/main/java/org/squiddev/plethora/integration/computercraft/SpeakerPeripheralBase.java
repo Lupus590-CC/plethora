@@ -2,15 +2,15 @@ package org.squiddev.plethora.integration.computercraft;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.peripheral.speaker.SpeakerPeripheral;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.IPeripheralHandler;
 import org.squiddev.plethora.api.vehicle.IVehicleAccess;
@@ -71,7 +71,7 @@ public class SpeakerPeripheralBase extends SpeakerPeripheral {
 		}
 
 		@Override
-		public void update(@Nonnull World world, @Nonnull Vec3d position, @Nullable EntityLivingBase entity) {
+		public void update(@Nonnull World world, @Nonnull Vec3d position, @Nullable LivingEntity entity) {
 			update(world, position);
 		}
 	}
@@ -101,7 +101,7 @@ public class SpeakerPeripheralBase extends SpeakerPeripheral {
 
 		@Nonnull
 		@Override
-		@SideOnly(Side.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		public Pair<IBakedModel, Matrix4f> getModel(@Nonnull IVehicleAccess access) {
 			// Scale 0.6
 			// RotateX PI

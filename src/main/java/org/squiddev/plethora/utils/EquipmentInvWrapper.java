@@ -1,7 +1,7 @@
 package org.squiddev.plethora.utils;
 
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -17,9 +17,9 @@ public final class EquipmentInvWrapper implements IItemHandlerModifiable {
 	private static final EntityEquipmentSlot[] VALUES = EntityEquipmentSlot.values();
 	private static final int SLOTS = VALUES.length;
 
-	private final EntityLivingBase entity;
+	private final LivingEntity entity;
 
-	public EquipmentInvWrapper(EntityLivingBase entity) {
+	public EquipmentInvWrapper(LivingEntity entity) {
 		this.entity = entity;
 	}
 

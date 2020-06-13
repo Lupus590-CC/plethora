@@ -1,8 +1,8 @@
 package org.squiddev.plethora.gameplay.modules.glasses;
 
 import it.unimi.dsi.fastutil.ints.*;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.gameplay.Plethora;
 import org.squiddev.plethora.gameplay.modules.glasses.objects.ObjectGroup;
 
@@ -54,7 +54,7 @@ public class CanvasClient {
 		return childrenOf.get(id);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void drawChildren(IntIterator children) {
 		while (children.hasNext()) {
 			int id = children.nextInt();

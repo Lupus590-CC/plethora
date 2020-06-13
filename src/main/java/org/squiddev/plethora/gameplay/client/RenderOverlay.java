@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -26,7 +26,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
 import org.squiddev.plethora.gameplay.ConfigGameplay;
@@ -143,12 +143,12 @@ public final class RenderOverlay {
 					// Gather all entities and render them
 					Vec3d position = player.getPositionEyes(event.getPartialTicks());
 					int range = ItemModule.getEffectiveRange(stack, ConfigGameplay.Sensor.radius, ConfigGameplay.Sensor.maxRadius);
-					List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
+					List<LivingEntity> entities = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(
 						position.x - range, position.y - range, position.z - range,
 						position.x + range, position.y + range, position.z + range
 					));
 
-					for (EntityLivingBase entity : entities) {
+					for (LivingEntity entity : entities) {
 						if (entity != player) {
 							renderFlare(
 								entity.posX, entity.posY + (entity.height / 2), entity.posZ,

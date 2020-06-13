@@ -1,6 +1,6 @@
 
 modLoader="javafml"
-loaderVersion="[25,)"
+loaderVersion="[31,32)"
 
 # updateJSONURL="http://myurl.me/" #optional
 issueTrackerURL="https://github.com/SquidDev-CC/plethora/issues"
@@ -21,7 +21,7 @@ Plethora is a ComputerCraft/CC:Tweaked peripheral provider for Minecraft 1.8.9+.
 [[dependencies.computercraft]]
     modId="forge"
     mandatory=true
-    versionRange="[25,)"
+    versionRange="[31.0.13,32)"
     ordering="NONE"
     side="BOTH"
 

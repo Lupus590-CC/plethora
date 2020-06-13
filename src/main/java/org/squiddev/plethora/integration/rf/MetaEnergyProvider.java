@@ -2,7 +2,7 @@ package org.squiddev.plethora.integration.rf;
 
 import cofh.redstoneflux.RedstoneFluxProps;
 import cofh.redstoneflux.api.IEnergyHandler;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import org.squiddev.plethora.api.Injects;
 import org.squiddev.plethora.api.meta.BasicMetaProvider;
 
@@ -27,17 +27,17 @@ public final class MetaEnergyProvider extends BasicMetaProvider<IEnergyHandler> 
 	public IEnergyHandler getExample() {
 		return new IEnergyHandler() {
 			@Override
-			public int getEnergyStored(EnumFacing from) {
+			public int getEnergyStored(Direction from) {
 				return 0;
 			}
 
 			@Override
-			public int getMaxEnergyStored(EnumFacing from) {
+			public int getMaxEnergyStored(Direction from) {
 				return 1000;
 			}
 
 			@Override
-			public boolean canConnectEnergy(EnumFacing from) {
+			public boolean canConnectEnergy(Direction from) {
 				return false;
 			}
 		};

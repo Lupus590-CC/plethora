@@ -1,6 +1,6 @@
 package org.squiddev.plethora.integration.vanilla.transfer;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.squiddev.plethora.api.Injects;
 import org.squiddev.plethora.api.transfer.ITransferProvider;
@@ -20,13 +20,13 @@ import java.util.Set;
  */
 @Injects
 public final class TransferSidedCapability implements ITransferProvider<ICapabilityProvider> {
-	private final Map<String, EnumFacing> mappings;
+	private final Map<String, Direction> mappings;
 
 	public TransferSidedCapability() {
-		Map<String, EnumFacing> mappings = this.mappings = new HashMap<>();
-		mappings.put("bottom_side", EnumFacing.DOWN);
-		mappings.put("top_side", EnumFacing.UP);
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		Map<String, Direction> mappings = this.mappings = new HashMap<>();
+		mappings.put("bottom_side", Direction.DOWN);
+		mappings.put("top_side", Direction.UP);
+		for (Direction facing : Direction.VALUES) {
 			mappings.put(facing.getName() + "_side", facing);
 		}
 	}
@@ -34,7 +34,7 @@ public final class TransferSidedCapability implements ITransferProvider<ICapabil
 	@Nullable
 	@Override
 	public Object getTransferLocation(@Nonnull ICapabilityProvider object, @Nonnull String key) {
-		final EnumFacing facing = mappings.get(key.toLowerCase());
+		final Direction facing = mappings.get(key.toLowerCase());
 		return facing == null ? null : new CapabilityWrapper(object, facing);
 	}
 
@@ -42,7 +42,7 @@ public final class TransferSidedCapability implements ITransferProvider<ICapabil
 	@Override
 	public Set<String> getTransferLocations(@Nonnull ICapabilityProvider object) {
 		HashSet<String> items = new HashSet<>(6);
-		for (EnumFacing item : EnumFacing.VALUES) {
+		for (Direction item : Direction.VALUES) {
 			items.add(item.getName() + "_side");
 		}
 

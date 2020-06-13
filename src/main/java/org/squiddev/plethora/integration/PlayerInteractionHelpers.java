@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -115,9 +115,9 @@ public final class PlayerInteractionHelpers {
 	 * Modified version of processRightClickBlock, but aborts after successful block interactions (rather than
 	 * attempting to right click a block).
 	 *
-	 * @see PlayerInteractionManager#processRightClickBlock(EntityPlayer, World, ItemStack, EnumHand, BlockPos, EnumFacing, float, float, float)
+	 * @see PlayerInteractionManager#processRightClickBlock(EntityPlayer, World, ItemStack, EnumHand, BlockPos, Direction, float, float, float)
 	 */
-	private static EnumActionResult rightClickBlock(EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	private static EnumActionResult rightClickBlock(EntityPlayer player, World worldIn, ItemStack stack, EnumHand hand, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ) {
 		double reachDist = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
 		PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, pos, facing, ForgeHooks.rayTraceEyeHitVec(player, reachDist + 1));
 		if (event.isCanceled()) return event.getCancellationResult();

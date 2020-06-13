@@ -1,7 +1,8 @@
 package org.squiddev.plethora.api;
 
+
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -30,5 +31,5 @@ public interface IPeripheralHandler {
 	 * @param position The position this peripheral exists at
 	 * @param entity   The owning entity
 	 */
-	void update(@Nonnull World world, @Nonnull Vec3d position, @Nullable EntityLivingBase entity);
+	void update(@Nonnull World world, @Nonnull Vec3d position, @Nullable LivingEntity entity);
 }

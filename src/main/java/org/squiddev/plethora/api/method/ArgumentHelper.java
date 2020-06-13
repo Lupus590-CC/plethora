@@ -1,17 +1,18 @@
 package org.squiddev.plethora.api.method;
 
 import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.lua.ObjectArguments;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-import static dan200.computercraft.api.lua.ArgumentHelper.*;
+import static dan200.computercraft.api.lua.LuaValues.*;
 
 /**
  * Various helpers for arguments.
  *
- * @see dan200.computercraft.api.lua.ArgumentHelper
+ * @see dan200.computercraft.api.lua.LuaValues
  */
 public final class ArgumentHelper {
 	private ArgumentHelper() {
@@ -27,14 +28,14 @@ public final class ArgumentHelper {
 		return new LuaException("bad key '" + key + "' (" + expected + " expected, got " + type + ")");
 	}
 
-	public static float getFloat(@Nonnull Object[] args, int index) throws LuaException {
-		return (float) getFiniteDouble(args, index);
+	public static float getFloat(@Nonnull ObjectArguments args, int index) throws LuaException {
+		return (float) args.getFiniteDouble(index);
 	}
 
 	@Nonnull
-	public static <T extends Enum<T>> T getEnum(@Nonnull Object[] args, int index, Class<T> klass) throws LuaException {
-		if (index >= args.length) throw badArgument(index, "string", "no value");
-		Object value = args[index];
+	public static <T extends Enum<T>> T getEnum(@Nonnull ObjectArguments args, int index, Class<T> klass) throws LuaException {
+		if (index >= args.count()) throw badArgument(index, "string", "no value");
+		Object value = args.get(index);
 		if (value instanceof String) {
 			String name = (String) value;
 			try {
@@ -47,8 +48,8 @@ public final class ArgumentHelper {
 		}
 	}
 
-	public static float optFloat(@Nonnull Object[] args, int index, float def) throws LuaException {
-		Object value = index < args.length ? args[index] : null;
+	public static float optFloat(@Nonnull ObjectArguments args, int index, float def) throws LuaException {
+		Object value = index < args.count() ? args.get(index) : null;
 		if (value == null) {
 			return def;
 		} else if (value instanceof Number) {
@@ -59,8 +60,8 @@ public final class ArgumentHelper {
 	}
 
 	@Nonnull
-	public static <T extends Enum<T>> T optEnum(@Nonnull Object[] args, int index, Class<T> klass, T def) throws LuaException {
-		return index >= args.length || args[index] == null ? def : getEnum(args, index, klass);
+	public static <T extends Enum<T>> T optEnum(@Nonnull ObjectArguments args, int index, Class<T> klass, T def) throws LuaException {
+		return index >= args.count() || args.get(index) == null ? def : getEnum(args, index, klass);
 	}
 
 	public static void assertBetween(double value, double min, double max, String message) throws LuaException {

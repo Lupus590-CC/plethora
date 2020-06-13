@@ -6,7 +6,7 @@ import dan200.computercraft.shared.util.DirectionUtil;
 import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
@@ -38,7 +38,7 @@ public final class FakePlayerProviderTurtle {
 		return fake;
 	}
 
-	public static void load(PlethoraFakePlayer player, ITurtleAccess turtle, EnumFacing direction) {
+	public static void load(PlethoraFakePlayer player, ITurtleAccess turtle, Direction direction) {
 		player.setWorld(turtle.getWorld());
 
 		BlockPos position = turtle.getPosition();
@@ -46,8 +46,8 @@ public final class FakePlayerProviderTurtle {
 			position.getX() + 0.5 + 0.51 * direction.getXOffset(),
 			position.getY() + 0.5 + 0.51 * direction.getYOffset(),
 			position.getZ() + 0.5 + 0.51 * direction.getZOffset(),
-			(direction.getAxis() != EnumFacing.Axis.Y ? direction : turtle.getDirection()).getHorizontalAngle(),
-			direction.getAxis() != EnumFacing.Axis.Y ? 0 : DirectionUtil.toPitchAngle(direction)
+			(direction.getAxis() != Direction.Axis.Y ? direction : turtle.getDirection()).getHorizontalAngle(),
+			direction.getAxis() != Direction.Axis.Y ? 0 : DirectionUtil.toPitchAngle(direction)
 		);
 
 		player.setSize(1, 1);

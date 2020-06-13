@@ -1,14 +1,14 @@
 package org.squiddev.plethora.api.module;
 
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.Constants;
 import org.squiddev.plethora.gameplay.client.RenderHelpers;
@@ -25,7 +25,7 @@ public class BasicModuleHandler extends AbstractModuleHandler implements ICapabi
 	private final ResourceLocation id;
 	private final Item item;
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	private IBakedModel model;
 
 	public BasicModuleHandler(ResourceLocation id, Item item) {
@@ -41,7 +41,7 @@ public class BasicModuleHandler extends AbstractModuleHandler implements ICapabi
 
 	@Nonnull
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public Pair<IBakedModel, Matrix4f> getModel(float delta) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
@@ -56,13 +56,13 @@ public class BasicModuleHandler extends AbstractModuleHandler implements ICapabi
 	}
 
 	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing enumFacing) {
+	public boolean hasCapability(@Nonnull Capability<?> capability, Direction direction) {
 		return capability == Constants.MODULE_HANDLER_CAPABILITY;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing enumFacing) {
+	public <T> T getCapability(@Nonnull Capability<T> capability, Direction direction) {
 		return capability == Constants.MODULE_HANDLER_CAPABILITY ? (T) this : null;
 	}
 }

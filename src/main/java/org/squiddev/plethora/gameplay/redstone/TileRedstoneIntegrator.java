@@ -10,7 +10,7 @@ import dan200.computercraft.shared.common.TileGeneric;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -40,9 +40,9 @@ public class TileRedstoneIntegrator extends TileGeneric implements IPeripheral, 
 		if (world == null || world.isRemote || isInvalid() || !world.isBlockLoaded(pos)) return;
 
 		boolean changed = false;
-		for (EnumFacing dir : EnumFacing.VALUES) {
+		for (Direction dir : Direction.VALUES) {
 			BlockPos offset = pos.offset(dir);
-			EnumFacing offsetSide = dir.getOpposite();
+			Direction offsetSide = dir.getOpposite();
 			int dirIdx = dir.ordinal();
 
 			byte newInput = (byte) getRedstoneInput(world, offset, offsetSide);
@@ -80,7 +80,7 @@ public class TileRedstoneIntegrator extends TileGeneric implements IPeripheral, 
 		if (world == null || world.isRemote || isInvalid() || !world.isBlockLoaded(pos)) return;
 
 		if (outputDirty) {
-			for (EnumFacing dir : EnumFacing.VALUES) {
+			for (Direction dir : Direction.VALUES) {
 				propagateRedstoneOutput(world, pos, dir);
 			}
 			outputDirty = false;
@@ -110,7 +110,7 @@ public class TileRedstoneIntegrator extends TileGeneric implements IPeripheral, 
 	 * @return The effective redstone power
 	 * @see net.minecraft.block.BlockRedstoneDiode#calculateInputStrength(World, BlockPos, IBlockState)
 	 */
-	private static int getRedstoneInput(World world, BlockPos pos, EnumFacing side) {
+	private static int getRedstoneInput(World world, BlockPos pos, Direction side) {
 		int power = world.getRedstonePower(pos, side);
 		if (power >= 15) return power;
 
@@ -128,7 +128,7 @@ public class TileRedstoneIntegrator extends TileGeneric implements IPeripheral, 
 	 * @param side  The side to propagate to
 	 * @see net.minecraft.block.BlockRedstoneDiode#notifyNeighbors(World, BlockPos, IBlockState)
 	 */
-	private static void propagateRedstoneOutput(World world, BlockPos pos, EnumFacing side) {
+	private static void propagateRedstoneOutput(World world, BlockPos pos, Direction side) {
 		IBlockState block = world.getBlockState(pos);
 		if (ForgeEventFactory.onNeighborNotify(world, pos, block, EnumSet.of(side), false).isCanceled()) return;
 
@@ -152,22 +152,22 @@ public class TileRedstoneIntegrator extends TileGeneric implements IPeripheral, 
 
 	//region Redstone output providers
 	@Override
-	public boolean getRedstoneConnectivity(EnumFacing side) {
+	public boolean getRedstoneConnectivity(Direction side) {
 		return true;
 	}
 
 	@Override
-	public int getRedstoneOutput(EnumFacing side) {
+	public int getRedstoneOutput(Direction side) {
 		return outputs[side.ordinal()];
 	}
 
 	@Override
-	public boolean getBundledRedstoneConnectivity(@Nonnull EnumFacing side) {
+	public boolean getBundledRedstoneConnectivity(@Nonnull Direction side) {
 		return true;
 	}
 
 	@Override
-	public int getBundledRedstoneOutput(@Nonnull EnumFacing side) {
+	public int getBundledRedstoneOutput(@Nonnull Direction side) {
 		return bundledOutputs[side.ordinal()];
 	}
 	//endregion
@@ -196,8 +196,8 @@ public class TileRedstoneIntegrator extends TileGeneric implements IPeripheral, 
 			case 0: { // getSides
 				Map<Integer, String> result = new HashMap<>();
 
-				for (int i = 0; i < EnumFacing.VALUES.length; i++) {
-					result.put(i + 1, EnumFacing.VALUES[i].getName());
+				for (int i = 0; i < Direction.VALUES.length; i++) {
+					result.put(i + 1, Direction.VALUES[i].getName());
 				}
 
 				return new Object[]{ result };
@@ -281,12 +281,12 @@ public class TileRedstoneIntegrator extends TileGeneric implements IPeripheral, 
 		return this == other;
 	}
 
-	private static EnumFacing getFacing(Object[] args, int index) throws LuaException {
+	private static Direction getFacing(Object[] args, int index) throws LuaException {
 		String value = getString(args, index);
-		if (value.equalsIgnoreCase("bottom")) return EnumFacing.DOWN;
-		if (value.equalsIgnoreCase("top")) return EnumFacing.UP;
+		if (value.equalsIgnoreCase("bottom")) return Direction.DOWN;
+		if (value.equalsIgnoreCase("top")) return Direction.UP;
 
-		EnumFacing facing = EnumFacing.byName(value);
+		Direction facing = Direction.byName(value);
 		if (facing == null) {
 			throw new LuaException("Bad name '" + value.toLowerCase(Locale.ENGLISH) + "' for argument " + (index + 1));
 		}
@@ -296,7 +296,7 @@ public class TileRedstoneIntegrator extends TileGeneric implements IPeripheral, 
 
 	@Nullable
 	@Override
-	public IPeripheral getPeripheral(@Nonnull EnumFacing facing) {
+	public IPeripheral getPeripheral(@Nonnull Direction facing) {
 		return this;
 	}
 	//endregion

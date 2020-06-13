@@ -2,9 +2,9 @@ package org.squiddev.plethora.api.reference;
 
 import com.google.common.base.Objects;
 import dan200.computercraft.api.lua.LuaException;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.squiddev.plethora.api.IWorldLocation;
@@ -17,11 +17,11 @@ public class BlockReference implements ConstantReference<BlockReference> {
 	private final IWorldLocation location;
 	private final WeakReference<TileEntity> tile;
 	private final int tileHash;
-	private final EnumFacing side;
-	private IBlockState state;
+	private final Direction side;
+	private BlockState state;
 	private boolean valid = true;
 
-	public BlockReference(@Nonnull IWorldLocation location, @Nonnull IBlockState state, @Nullable TileEntity tile, @Nullable EnumFacing side) {
+	public BlockReference(@Nonnull IWorldLocation location, @Nonnull BlockState state, @Nullable TileEntity tile, @Nullable Direction side) {
 		this.location = location;
 		this.tile = tile == null ? null : new WeakReference<>(tile);
 		tileHash = tile == null ? 0 : tile.hashCode();
@@ -29,14 +29,14 @@ public class BlockReference implements ConstantReference<BlockReference> {
 		this.state = state;
 	}
 
-	public BlockReference(@Nonnull IWorldLocation location, @Nonnull IBlockState state, @Nullable TileEntity tile) {
+	public BlockReference(@Nonnull IWorldLocation location, @Nonnull BlockState state, @Nullable TileEntity tile) {
 		this(location, state, tile, null);
 	}
 
-	public BlockReference(@Nonnull IWorldLocation location, @Nullable EnumFacing side) {
+	public BlockReference(@Nonnull IWorldLocation location, @Nullable Direction side) {
 		this(
 			location,
-			location.getWorld().getBlockState(location.getPos()).getActualState(location.getWorld(), location.getPos()),
+			location.getWorld().getBlockState(location.getPos()),
 			location.getWorld().getTileEntity(location.getPos()),
 			side
 		);
@@ -52,7 +52,7 @@ public class BlockReference implements ConstantReference<BlockReference> {
 		World world = location.getWorld();
 		BlockPos pos = location.getPos();
 
-		IBlockState newState = world.getBlockState(pos);
+		BlockState newState = world.getBlockState(pos);
 		TileEntity newTe = world.getTileEntity(pos);
 
 		if (tile == null) {
@@ -78,7 +78,7 @@ public class BlockReference implements ConstantReference<BlockReference> {
 		}
 
 		// Update the block state if everything is OK
-		state = newState.getActualState(world, pos);
+		state = newState;
 
 		valid = true;
 		return this;
@@ -91,7 +91,7 @@ public class BlockReference implements ConstantReference<BlockReference> {
 
 		if (tile != null) {
 			TileEntity oldTe = tile.get();
-			if (oldTe == null || oldTe.isInvalid()) throw new LuaException("The block has changed");
+			if (oldTe == null || oldTe.isRemoved()) throw new LuaException("The block has changed");
 		}
 
 		return this;
@@ -103,7 +103,7 @@ public class BlockReference implements ConstantReference<BlockReference> {
 	}
 
 	@Nonnull
-	public IBlockState getState() {
+	public BlockState getState() {
 		return state;
 	}
 
@@ -113,7 +113,7 @@ public class BlockReference implements ConstantReference<BlockReference> {
 	}
 
 	@Nullable
-	public EnumFacing getSide() {
+	public Direction getSide() {
 		return side;
 	}
 

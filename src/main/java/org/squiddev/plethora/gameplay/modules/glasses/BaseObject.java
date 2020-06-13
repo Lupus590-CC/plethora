@@ -3,8 +3,8 @@ package org.squiddev.plethora.gameplay.modules.glasses;
 import dan200.computercraft.api.lua.LuaException;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.api.reference.ConstantReference;
 
 import javax.annotation.Nonnull;
@@ -81,7 +81,7 @@ public abstract class BaseObject {
 	 *
 	 * @param canvas The canvas context we are drawing within
 	 */
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public abstract void draw(CanvasClient canvas);
 
 	static class BaseObjectReference<T extends BaseObject> implements ConstantReference<T> {
@@ -112,7 +112,7 @@ public abstract class BaseObject {
 	/**
 	 * Prepare to draw a flat object.
 	 */
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	protected static void setupFlat() {
 		GlStateManager.color(1, 1, 1);
 		GlStateManager.disableCull();

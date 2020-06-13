@@ -1,12 +1,12 @@
 package org.squiddev.plethora.core;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.EntityWorldLocation;
 import org.squiddev.plethora.api.IWorldLocation;
@@ -39,7 +39,7 @@ public class VehicleUpgradeModule implements IVehicleUpgradeHandler {
 
 	@Nonnull
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public Pair<IBakedModel, Matrix4f> getModel(@Nonnull IVehicleAccess access) {
 		Pair<IBakedModel, Matrix4f> model = handler.getModel(0);
 
@@ -144,7 +144,7 @@ public class VehicleUpgradeModule implements IVehicleUpgradeHandler {
 
 		@Nonnull
 		@Override
-		public NBTTagCompound getData() {
+		public CompoundNBT getData() {
 			return access.getData();
 		}
 

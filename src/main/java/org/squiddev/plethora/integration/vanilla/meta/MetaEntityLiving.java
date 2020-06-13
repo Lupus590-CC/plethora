@@ -1,7 +1,7 @@
 package org.squiddev.plethora.integration.vanilla.meta;
 
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -22,11 +22,11 @@ import java.util.Map;
  * A basic provider for living entities
  */
 @Injects
-public final class MetaEntityLiving extends BaseMetaProvider<EntityLivingBase> {
+public final class MetaEntityLiving extends BaseMetaProvider<LivingEntity> {
 	@Nonnull
 	@Override
-	public Map<String, ?> getMeta(@Nonnull IPartialContext<EntityLivingBase> context) {
-		EntityLivingBase target = context.getTarget();
+	public Map<String, ?> getMeta(@Nonnull IPartialContext<LivingEntity> context) {
+		LivingEntity target = context.getTarget();
 		Map<String, Object> map = new HashMap<>();
 
 		{

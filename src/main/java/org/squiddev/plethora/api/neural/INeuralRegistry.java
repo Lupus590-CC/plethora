@@ -1,6 +1,6 @@
 package org.squiddev.plethora.api.neural;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
@@ -16,5 +16,5 @@ public interface INeuralRegistry {
 	 * @param predicate The predicate which will receive an entity. If {@code false} is returned then the neural
 	 *                  interface will be blocked from connecting, otherwise the remaining predicates will be checked.
 	 */
-	void addEquipPredicate(@Nonnull Predicate<EntityLivingBase> predicate);
+	void addEquipPredicate(@Nonnull Predicate<LivingEntity> predicate);
 }

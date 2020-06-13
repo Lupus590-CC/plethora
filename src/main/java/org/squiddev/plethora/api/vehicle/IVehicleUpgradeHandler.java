@@ -1,15 +1,16 @@
 package org.squiddev.plethora.api.vehicle;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import javax.vecmath.Matrix4f;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.vecmath.Matrix4f;
+
 
 /**
  * A capability which provides an upgrade to various vehicles.
@@ -23,7 +24,7 @@ public interface IVehicleUpgradeHandler {
 	 * @see net.minecraft.client.renderer.ItemModelMesher#getItemModel(ItemStack)
 	 */
 	@Nonnull
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	Pair<IBakedModel, Matrix4f> getModel(@Nonnull IVehicleAccess access);
 
 	/**

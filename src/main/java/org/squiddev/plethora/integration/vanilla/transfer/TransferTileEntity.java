@@ -1,7 +1,7 @@
 package org.squiddev.plethora.integration.vanilla.transfer;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.squiddev.plethora.api.Injects;
@@ -21,13 +21,13 @@ import java.util.Set;
  */
 @Injects
 public final class TransferTileEntity implements ITransferProvider<TileEntity> {
-	private final Map<String, EnumFacing> mappings;
+	private final Map<String, Direction> mappings;
 
 	public TransferTileEntity() {
-		Map<String, EnumFacing> mappings = this.mappings = new HashMap<>();
-		mappings.put("below", EnumFacing.DOWN);
-		mappings.put("above", EnumFacing.UP);
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		Map<String, Direction> mappings = this.mappings = new HashMap<>();
+		mappings.put("below", Direction.DOWN);
+		mappings.put("above", Direction.UP);
+		for (Direction facing : Direction.VALUES) {
 			mappings.put(facing.getName(), facing);
 		}
 	}
@@ -37,7 +37,7 @@ public final class TransferTileEntity implements ITransferProvider<TileEntity> {
 	public Object getTransferLocation(@Nonnull TileEntity object, @Nonnull String key) {
 		if (key.equals("self")) return object;
 
-		EnumFacing facing = mappings.get(key);
+		Direction facing = mappings.get(key);
 		if (facing != null) {
 			BlockPos newPos = object.getPos().offset(facing);
 			return object.getWorld().getTileEntity(newPos);
@@ -55,7 +55,7 @@ public final class TransferTileEntity implements ITransferProvider<TileEntity> {
 		World world = object.getWorld();
 		BlockPos pos = object.getPos();
 
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		for (Direction facing : Direction.VALUES) {
 			if (world.getTileEntity(pos.offset(facing)) != null) out.add(facing.getName2());
 		}
 

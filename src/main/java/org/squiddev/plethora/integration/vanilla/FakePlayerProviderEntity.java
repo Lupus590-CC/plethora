@@ -2,7 +2,7 @@ package org.squiddev.plethora.integration.vanilla;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -45,8 +45,8 @@ public final class FakePlayerProviderEntity {
 
 		player.inventory.currentItem = 0;
 
-		if (entity instanceof EntityLivingBase) {
-			EntityLivingBase living = (EntityLivingBase) entity;
+		if (entity instanceof LivingEntity) {
+			LivingEntity living = (LivingEntity) entity;
 			for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
 				ItemStack stack = living.getItemStackFromSlot(slot);
 
@@ -62,7 +62,7 @@ public final class FakePlayerProviderEntity {
 		player.inventory.markDirty();
 	}
 
-	public static void unload(PlethoraFakePlayer player, EntityLivingBase entity) {
+	public static void unload(PlethoraFakePlayer player, LivingEntity entity) {
 		player.inventory.currentItem = 0;
 		player.setSize(0, 0);
 		player.eyeHeight = player.getDefaultEyeHeight();

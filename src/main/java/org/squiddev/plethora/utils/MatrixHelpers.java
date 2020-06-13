@@ -1,6 +1,6 @@
 package org.squiddev.plethora.utils;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import javax.vecmath.Matrix4f;
@@ -15,8 +15,8 @@ public final class MatrixHelpers {
 	private static final Matrix4f[] FACINGS;
 
 	static {
-		FACINGS = new Matrix4f[EnumFacing.VALUES.length];
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		FACINGS = new Matrix4f[Direction.VALUES.length];
+		for (Direction facing : Direction.VALUES) {
 			int x, y;
 			switch (facing) {
 				default:
@@ -69,7 +69,7 @@ public final class MatrixHelpers {
 		}
 	}
 
-	public static Matrix4f matrixFor(EnumFacing facing) {
+	public static Matrix4f matrixFor(Direction facing) {
 		int index = facing.ordinal();
 		return index < FACINGS.length ? FACINGS[index] : IDENTITY;
 	}

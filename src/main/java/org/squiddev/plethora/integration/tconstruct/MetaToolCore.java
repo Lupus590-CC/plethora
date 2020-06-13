@@ -1,8 +1,8 @@
 package org.squiddev.plethora.integration.tconstruct;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import org.squiddev.plethora.api.Injects;
 import org.squiddev.plethora.api.meta.ItemStackContextMetaProvider;
 import org.squiddev.plethora.api.method.IPartialContext;
@@ -52,9 +52,9 @@ public final class MetaToolCore extends ItemStackContextMetaProvider<ToolCore> {
 			Map<Integer, Map<String, String>> modifiers = new HashMap<>();
 			int modIndex = 0;
 
-			NBTTagList tagList = TagUtil.getModifiersTagList(stack);
+			ListNBT tagList = TagUtil.getModifiersTagList(stack);
 			for (int i = 0; i < tagList.tagCount(); i++) {
-				NBTTagCompound tag = tagList.getCompoundTagAt(i);
+				CompoundNBT tag = tagList.getCompoundTagAt(i);
 				ModifierNBT data = ModifierNBT.readTag(tag);
 
 				// get matching modifier

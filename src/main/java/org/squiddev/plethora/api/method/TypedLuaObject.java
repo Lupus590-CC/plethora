@@ -1,12 +1,12 @@
 package org.squiddev.plethora.api.method;
 
-import dan200.computercraft.api.lua.ILuaObject;
+import dan200.computercraft.api.lua.IDynamicLuaObject;
 
 /**
- * A {@link ILuaObject} which targets a specific type.
+ * A {@link IDynamicLuaObject} which targets a specific type.
  *
  * @param <T> The type this object targets
  * @see IContext#getObject()
  */
-public interface TypedLuaObject<T> extends ILuaObject {
+public interface TypedLuaObject<T> extends IDynamicLuaObject {
 }

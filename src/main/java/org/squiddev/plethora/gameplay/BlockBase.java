@@ -9,15 +9,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.utils.Helpers;
 
 import javax.annotation.Nonnull;
@@ -67,7 +67,7 @@ public abstract class BlockBase<T extends TileBase> extends BlockContainer {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
 		TileBase tile = getTile(world, pos);
 		return tile != null && tile.onActivated(player, hand, side, new Vec3d(hitX, hitY, hitZ));
 	}
@@ -104,7 +104,7 @@ public abstract class BlockBase<T extends TileBase> extends BlockContainer {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> out, ITooltipFlag advanced) {
 		super.addInformation(stack, world, out, advanced);
 		out.add(Helpers.translateToLocal(getTranslationKey(stack.getItemDamage()) + ".desc"));

@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,8 +20,8 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.StringUtils;
 import org.squiddev.plethora.core.ConfigCore;
 import org.squiddev.plethora.core.PlethoraCore;
@@ -83,7 +83,7 @@ public final class Helpers {
 		return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void setupModel(Item item, int damage, String name) {
 		name = Plethora.RESOURCE_DOMAIN + ":" + snakeCase(name);
 
@@ -221,12 +221,12 @@ public final class Helpers {
 	}
 
 	public static boolean onEntityInteract(Item item, EntityPlayer player, Entity target, EnumHand hand) {
-		if (!(target instanceof EntityLivingBase)) return false;
+		if (!(target instanceof LivingEntity)) return false;
 
 		ItemStack current = player.getHeldItem(hand);
 		if (current.isEmpty() || current.getItem() != item) return false;
 
-		boolean result = item.itemInteractionForEntity(current, player, (EntityLivingBase) target, hand);
+		boolean result = item.itemInteractionForEntity(current, player, (LivingEntity) target, hand);
 
 		if (current.getCount() <= 0) {
 			player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
@@ -251,7 +251,7 @@ public final class Helpers {
 		return hash;
 	}
 
-	public static boolean isHolding(EntityLivingBase entity, Item item) {
+	public static boolean isHolding(LivingEntity entity, Item item) {
 		ItemStack left = entity.getHeldItem(EnumHand.MAIN_HAND);
 		if (!left.isEmpty() && left.getItem() == item) return true;
 
@@ -261,7 +261,7 @@ public final class Helpers {
 		return false;
 	}
 
-	public static boolean isHolding(EntityLivingBase entity, Item item, int damage) {
+	public static boolean isHolding(LivingEntity entity, Item item, int damage) {
 		ItemStack left = entity.getHeldItem(EnumHand.MAIN_HAND);
 		if (!left.isEmpty() && left.getItem() == item && left.getItemDamage() == damage) return true;
 

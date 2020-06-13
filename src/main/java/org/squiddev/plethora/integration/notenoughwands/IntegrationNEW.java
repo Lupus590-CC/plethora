@@ -1,10 +1,10 @@
 package org.squiddev.plethora.integration.notenoughwands;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.registry.EntityEntry;
@@ -31,13 +31,13 @@ public final class IntegrationNEW {
 		@Nullable
 		@Override
 		protected Entity spawn(@Nonnull ItemStack stack, @Nonnull CapturingWand item, @Nonnull IWorldLocation location) {
-			NBTTagCompound tag = stack.getTagCompound();
+			CompoundNBT tag = stack.getTagCompound();
 			if (tag == null || !tag.hasKey("type", Constants.NBT.TAG_STRING)) return null;
 
-			Class<? extends EntityLivingBase> type = getClass(tag.getString("type"));
+			Class<? extends LivingEntity> type = getClass(tag.getString("type"));
 			if (type == null) return null;
 
-			EntityLivingBase entity;
+			LivingEntity entity;
 			try {
 				entity = type.getConstructor(World.class).newInstance(location.getWorld());
 			} catch (ReflectiveOperationException | RuntimeException e) {
@@ -51,10 +51,10 @@ public final class IntegrationNEW {
 		@Nonnull
 		@Override
 		protected Map<String, ?> getBasicDetails(@Nonnull ItemStack stack, @Nonnull CapturingWand item) {
-			NBTTagCompound tag = stack.getTagCompound();
+			CompoundNBT tag = stack.getTagCompound();
 			if (tag == null || !tag.hasKey("type", Constants.NBT.TAG_STRING)) return Collections.emptyMap();
 
-			Class<? extends EntityLivingBase> type = getClass(tag.getString("type"));
+			Class<? extends LivingEntity> type = getClass(tag.getString("type"));
 			if (type == null) return Collections.emptyMap();
 
 			EntityEntry entry = EntityRegistry.getEntry(type);
@@ -64,9 +64,9 @@ public final class IntegrationNEW {
 		}
 
 		@Nullable
-		private Class<? extends EntityLivingBase> getClass(String type) {
+		private Class<? extends LivingEntity> getClass(String type) {
 			try {
-				return Class.forName(type).asSubclass(EntityLivingBase.class);
+				return Class.forName(type).asSubclass(LivingEntity.class);
 			} catch (ReflectiveOperationException ignored) {
 				return null;
 			}
@@ -76,7 +76,7 @@ public final class IntegrationNEW {
 		@Override
 		public ItemStack getExample() {
 			ItemStack stack = new ItemStack(ModItems.capturingWand);
-			NBTTagCompound tag = new NBTTagCompound();
+			CompoundNBT tag = new CompoundNBT();
 			tag.setString("type", EntitySquid.class.getName());
 			stack.setTagCompound(tag);
 			return stack;

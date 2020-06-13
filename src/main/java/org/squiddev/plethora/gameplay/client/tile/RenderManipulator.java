@@ -1,10 +1,10 @@
 package org.squiddev.plethora.gameplay.client.tile;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,7 +39,7 @@ public final class RenderManipulator extends TileEntitySpecialRenderer<TileManip
 		float delta = (float) manipulator.incrementRotation();
 
 		int size = type.size();
-		AxisAlignedBB[] boxes = type.boxesFor(EnumFacing.DOWN);
+		AxisAlignedBB[] boxes = type.boxesFor(Direction.DOWN);
 		for (int i = 0; i < size; i++) {
 			ItemStack stack = manipulator.getStack(i);
 			if (!stack.isEmpty()) {

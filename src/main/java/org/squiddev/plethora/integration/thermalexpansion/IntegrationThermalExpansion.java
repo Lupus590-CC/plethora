@@ -5,7 +5,7 @@ import cofh.thermalexpansion.item.ItemMorb;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 import org.squiddev.plethora.api.IWorldLocation;
@@ -26,7 +26,7 @@ public final class IntegrationThermalExpansion {
 		@Nullable
 		@Override
 		protected Entity spawn(@Nonnull ItemStack stack, @Nonnull ItemMorb item, @Nonnull IWorldLocation location) {
-			NBTTagCompound entityData = stack.getTagCompound();
+			CompoundNBT entityData = stack.getTagCompound();
 			if (entityData == null || !entityData.hasKey("id", Constants.NBT.TAG_STRING)) return null;
 
 			return entityData.getBoolean(ItemMorb.GENERIC)

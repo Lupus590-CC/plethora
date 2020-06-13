@@ -7,8 +7,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.api.IWorldLocation;
 import org.squiddev.plethora.api.method.ContextKeys;
 import org.squiddev.plethora.api.method.wrapper.FromContext;
@@ -52,7 +52,7 @@ public class ObjectRoot3D extends BaseObject implements ObjectGroup.Group3D {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void draw(CanvasClient canvas) {
 		IntSet children = canvas.getChildren(id());
 		if (children == null) return;

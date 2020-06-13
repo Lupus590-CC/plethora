@@ -8,32 +8,71 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:3.0.169'
 	}
 }
 
 plugins {
-	id 'com.matthewprenger.cursegradle' version '1.2.0'
+	id 'com.matthewprenger.cursegradle' version '1.3.0'
 	id "com.github.ben-manes.versions" version "0.21.0" // Provides dependencyUpdates task.
 }
 
 buildDir = "build"
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 
 version = mc_version + "-" + mod_version
 group = "org.squiddev"
 archivesBaseName = "plethora"
 
-minecraft {
-	version = "${project.mc_version}-${project.forge_version}"
-	runDir = "run"
-	mappings = "snapshot_20180814"
+// Not quite ready for common usage, but helped a lot in checking stuff
+// compileJava { options.compilerArgs << "-Xplugin:ForgeLint" }
 
-	replace '${mod_version}', project.mod_version
-	replace '${mc_version}', project.mc_version
-	replace '${cct_version}', project.cct_version
-	replace '${forge_version}', project.forge_version
+minecraft {
+	runs {
+		client {
+			// Added for mods that have per-player data, e.g. Astral Sorcery
+//			args ['--username', 'PlethoraDev']
+			workingDirectory project.file('run')
+			property 'forge.logging.markers', 'REGISTRIES'
+			property 'forge.logging.console.level', 'debug'
+
+			mods {
+				plethora {
+					source sourceSets.main
+				}
+			}
+		}
+
+		server {
+			workingDirectory project.file("run/server-${mc_version}")
+			property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.console.level', 'debug'
+
+			mods {
+				computercraft {
+					source sourceSets.main
+				}
+			}
+		}
+
+		data {
+			workingDirectory project.file('run')
+			property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.console.level', 'debug'
+
+			args '--mod', 'computercraft', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+			mods {
+				computercraft {
+					source sourceSets.main
+				}
+			}
+		}
+	}
+
+	mappings channel: 'snapshot', version: "${mappings_version}".toString()
+
+	accessTransformer file('src/main/resources/META-INF/accesstransformer.cfg')
 }
 
 jar {
@@ -71,13 +110,16 @@ repositories {
 	maven { url 'https://mod-buildcraft.com/maven/' } // Buildcraft
 	maven { url 'https://maven.hellfiredev.net/' } // Astral Sorcery
 	maven { url 'https://squiddev.cc/maven/' } // CC: Tweaked
+	maven { url 'https://maven.theillusivec4.top/' } // Curios
 	maven { url 'https://minecraft.curseforge.com/api/maven/' } // Everything else
 }
 
 dependencies {
-	deobfCompile "org.squiddev:cc-tweaked-${mc_version}:${cct_version}"
-
 	compile "mezz.jei:jei_1.12.2:4.15.0.268"
+	compile ("org.squiddev:cc-tweaked-${mc_version}:${cct_version}")
+	compile 'java3d:vecmath:1.5.2'
+
+	minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
 	// External mods with maven dependencies. Have fun when the next version of Minecraft drops!
 	integrationMod "appeng:appliedenergistics2:rv6-stable-6"
@@ -110,18 +152,18 @@ dependencies {
 	integrationMod "net.ndrei:tesla-core-lib:1.12.2-1.0.15.16:deobf"
 
 	// All the Curse mods
-	integrationMod "baubles:Baubles:1.12:1.5.2"
-	integrationMod "storage-drawers:StorageDrawers:1.12.2:5.3.8"
-	integrationMod "chameleon:Chameleon:1.12:4.1.3"
-	integrationMod "blockcraftery:blockcraftery:1.12.2:1.2.0"
-	integrationMod "mysticallib:mysticallib:1.12.2:1.1.1"
-	integrationMod "roost:roost:1.12:1.3.0"
-	integrationMod "chickens:chickens:6.0.4"
-	integrationMod "hatchery:hatchery:1.12.2:2.2.1"
-	integrationMod "cyclic:Cyclic:1.12.2:1.19.9"
-	integrationMod "extra-utilities:extrautils2:1.12:1.9.9"
-	integrationMod "not-enough-wands:notenoughwands:1.12:1.8.1"
-	integrationMod "buildcraft:buildcraft:all:7.99.24.4"
+//	integrationMod "baubles:Baubles:1.12:1.5.2"
+	integrationMod "storage-drawers:StorageDrawers:1.15.2:7.0.2"
+//	integrationMod "chameleon:Chameleon:1.12:4.1.3"
+//	integrationMod "blockcraftery:blockcraftery:1.12.2:1.2.0"
+	integrationMod "mysticallib:mysticallib:1.15.2:2.0.0"
+//	integrationMod "roost:roost:1.12:1.3.0"
+//	integrationMod "chickens:chickens:6.0.4"
+//	integrationMod "hatchery:hatchery:1.12.2:2.2.1"
+	integrationMod "cyclic:Cyclic:1.15.2:0.4.1"
+//	integrationMod "extra-utilities:extrautils2:1.12:1.9.9"
+//	integrationMod "not-enough-wands:notenoughwands:1.12:1.8.1"
+//	integrationMod "buildcraft:buildcraft:all:7.99.24.4"
 
 	compileOnly('org.squiddev:ConfigGen:1.2.5') { exclude group: 'net.minecraftforge' }
 
@@ -156,24 +198,17 @@ gradle.projectsEvaluated {
 	}
 }
 
-// Not quite ready for common usage, but helped a lot in checking stuff
-// compileJava { options.compilerArgs << "-Xplugin:ForgeLint" }
-
-// Added for mods that have per-player data, e.g. Astral Sorcery
-runClient {
-	args '--username', 'PlethoraDev'
-}
-
 curseforge {
 	apiKey = project.hasProperty('curseForgeApiKey') ? project.curseForgeApiKey : ''
 
 	project {
 		id = '248425'
 		releaseType = 'release'
+		gameVersionStrings.add(mc_version)
 		changelog = "Release notes can be found on the GitHub repository (https://github.com/SquidDev-CC/plethora/releases/tag/v${project.version})."
 
 		 relations {
-			 requiredLibrary 'cc-tweaked'
+			 requiredDependency 'cc-tweaked'
 		 }
 	}
 }

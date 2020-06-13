@@ -2,7 +2,7 @@ package org.squiddev.plethora.integration.vanilla.method;
 
 import dan200.computercraft.api.lua.LuaException;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -59,7 +59,7 @@ public final class MethodsKineticEntity {
 	}
 
 	@PlethoraMethod(module = PlethoraModules.KINETIC_S, doc = "-- Look in a set direction")
-	public static void look(@FromSubtarget EntityLivingBase target, double yaw, double pitch) {
+	public static void look(@FromSubtarget LivingEntity target, double yaw, double pitch) {
 		yaw = normaliseAngle(yaw);
 		pitch = MathHelper.clamp(normaliseAngle(pitch), -90, 90);
 

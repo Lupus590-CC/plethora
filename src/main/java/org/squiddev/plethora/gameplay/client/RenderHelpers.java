@@ -5,19 +5,19 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.pipeline.LightUtil;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Matrix4f;
@@ -41,7 +41,7 @@ public final class RenderHelpers {
 		mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
 		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		for (Direction facing : Direction.VALUES) {
 			renderQuads(renderer, model.getQuads(null, facing, 0));
 		}
 
@@ -59,10 +59,10 @@ public final class RenderHelpers {
 		return identity;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	private static ItemModelMesher mesher;
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static ItemModelMesher getMesher() {
 		ItemModelMesher mesher = RenderHelpers.mesher;
 		if (mesher == null) {

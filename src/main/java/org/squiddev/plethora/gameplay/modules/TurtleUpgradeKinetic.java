@@ -2,7 +2,7 @@ package org.squiddev.plethora.gameplay.modules;
 
 import dan200.computercraft.api.turtle.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.RayTraceResult;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.IPlayerOwnable;
@@ -28,7 +28,7 @@ public class TurtleUpgradeKinetic extends TurtleUpgradeModule {
 
 	@Nonnull
 	@Override
-	public TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull EnumFacing direction) {
+	public TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction) {
 		if (isBlacklisted()) return TurtleCommandResult.failure();
 
 		IPlayerOwnable ownable = new TurtlePlayerOwnable(turtle);

@@ -3,9 +3,9 @@ package org.squiddev.plethora.integration.vanilla.meta;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraftforge.common.util.Constants;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.output.NullOutputStream;
@@ -51,12 +51,12 @@ public final class MetaItemBasic extends BasicMetaProvider<ItemStack> {
 			data.put("durability", stack.getItem().getDurabilityForDisplay(stack));
 		}
 
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		if (tag != null && tag.hasKey("display", Constants.NBT.TAG_COMPOUND)) {
-			NBTTagCompound displayTag = tag.getCompoundTag("display");
+			CompoundNBT displayTag = tag.getCompoundTag("display");
 			if (displayTag.hasKey("Lore", Constants.NBT.TAG_LIST)) {
-				NBTTagList loreTag = displayTag.getTagList("Lore", Constants.NBT.TAG_STRING);
-				data.put("lore", Helpers.map(loreTag, x -> ((NBTTagString) x).getString()));
+				ListNBT loreTag = displayTag.getTagList("Lore", Constants.NBT.TAG_STRING);
+				data.put("lore", Helpers.map(loreTag, x -> ((StringNBT) x).getString()));
 			}
 		}
 
@@ -89,7 +89,7 @@ public final class MetaItemBasic extends BasicMetaProvider<ItemStack> {
 	}
 
 	@Nullable
-	public static String getNBTHash(@Nullable NBTTagCompound tag) {
+	public static String getNBTHash(@Nullable CompoundNBT tag) {
 		if (tag == null || tag.isEmpty()) return null;
 
 		try {

@@ -6,9 +6,9 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.ByteNBT;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -33,12 +33,12 @@ public final class DisableAI {
 	public static void register() {
 		CapabilityManager.INSTANCE.register(IDisableAIHandler.class, new Capability.IStorage<IDisableAIHandler>() {
 			@Override
-			public NBTBase writeNBT(Capability<IDisableAIHandler> capability, IDisableAIHandler instance, EnumFacing side) {
-				return new NBTTagByte((byte) (instance.isDisabled() ? 1 : 0));
+			public NBTBase writeNBT(Capability<IDisableAIHandler> capability, IDisableAIHandler instance, Direction side) {
+				return new ByteNBT((byte) (instance.isDisabled() ? 1 : 0));
 			}
 
 			@Override
-			public void readNBT(Capability<IDisableAIHandler> capability, IDisableAIHandler instance, EnumFacing side, NBTBase nbt) {
+			public void readNBT(Capability<IDisableAIHandler> capability, IDisableAIHandler instance, Direction side, NBTBase nbt) {
 				instance.setDisabled(nbt instanceof NBTPrimitive && ((NBTPrimitive) nbt).getByte() == 1);
 			}
 		}, DefaultDisableAI::new);
@@ -50,7 +50,7 @@ public final class DisableAI {
 		void setDisabled(boolean value);
 	}
 
-	static class DefaultDisableAI implements IDisableAIHandler, ICapabilitySerializable<NBTTagCompound> {
+	static class DefaultDisableAI implements IDisableAIHandler, ICapabilitySerializable<CompoundNBT> {
 		private final EntityLiving entity;
 		private boolean disabled;
 		private EntityAITasks.EntityAITaskEntry task;
@@ -64,12 +64,12 @@ public final class DisableAI {
 		}
 
 		@Override
-		public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
+		public boolean hasCapability(@Nonnull Capability<?> capability, Direction facing) {
 			return capability == DISABLE_AI_CAPABILITY;
 		}
 
 		@Override
-		public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+		public <T> T getCapability(@Nonnull Capability<T> capability, Direction facing) {
 			return capability == DISABLE_AI_CAPABILITY ? DISABLE_AI_CAPABILITY.cast(this) : null;
 		}
 
@@ -104,18 +104,18 @@ public final class DisableAI {
 		}
 
 		@Override
-		public NBTTagCompound serializeNBT() {
+		public CompoundNBT serializeNBT() {
 			if (disabled) {
-				NBTTagCompound tag = new NBTTagCompound();
+				CompoundNBT tag = new CompoundNBT();
 				tag.setBoolean("disabled", true);
 				return tag;
 			} else {
-				return new NBTTagCompound();
+				return new CompoundNBT();
 			}
 		}
 
 		@Override
-		public void deserializeNBT(NBTTagCompound tag) {
+		public void deserializeNBT(CompoundNBT tag) {
 			setDisabled(tag != null && tag.getBoolean("disabled"));
 		}
 	}

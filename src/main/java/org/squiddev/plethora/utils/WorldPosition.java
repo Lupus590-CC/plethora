@@ -1,6 +1,6 @@
 package org.squiddev.plethora.utils;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -69,8 +69,8 @@ public final class WorldPosition {
 		return pos;
 	}
 
-	public NBTTagCompound serializeNBT() {
-		NBTTagCompound tag = new NBTTagCompound();
+	public CompoundNBT serializeNBT() {
+		CompoundNBT tag = new CompoundNBT();
 		tag.setInteger("dim", dimension);
 		tag.setDouble("x", pos.x);
 		tag.setDouble("y", pos.y);
@@ -78,7 +78,7 @@ public final class WorldPosition {
 		return tag;
 	}
 
-	public static WorldPosition deserializeNBT(NBTTagCompound nbt) {
+	public static WorldPosition deserializeNBT(CompoundNBT nbt) {
 		return new WorldPosition(nbt.getInteger("dim"), new Vec3d(nbt.getDouble("x"), nbt.getDouble("y"), nbt.getDouble("z")));
 	}
 }

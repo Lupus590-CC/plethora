@@ -3,13 +3,13 @@ package org.squiddev.plethora.integration.xnet;
 import mcjty.xnet.api.gui.IEditorGui;
 import mcjty.xnet.api.gui.IndicatorIcon;
 import mcjty.xnet.api.helper.AbstractConnectorSettings;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 class NetworkConnectorSettings extends AbstractConnectorSettings {
-	NetworkConnectorSettings(@Nonnull EnumFacing side) {
+	NetworkConnectorSettings(@Nonnull Direction side) {
 		super(side);
 	}
 

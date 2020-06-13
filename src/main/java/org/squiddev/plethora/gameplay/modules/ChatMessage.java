@@ -6,7 +6,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
 import org.squiddev.plethora.gameplay.client.RenderOverlay;
 import org.squiddev.plethora.gameplay.registry.BasicMessage;
 

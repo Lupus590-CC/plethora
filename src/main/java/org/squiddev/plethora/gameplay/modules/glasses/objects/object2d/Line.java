@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.gameplay.modules.glasses.CanvasClient;
 import org.squiddev.plethora.gameplay.modules.glasses.objects.ColourableObject;
 import org.squiddev.plethora.gameplay.modules.glasses.objects.ObjectRegistry;
@@ -84,7 +84,7 @@ public class Line extends ColourableObject implements Scalable, MultiPoint2D {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void draw(CanvasClient canvas) {
 		setupFlat();
 		GlStateManager.glLineWidth(thickness);

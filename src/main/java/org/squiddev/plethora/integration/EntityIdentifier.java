@@ -3,7 +3,7 @@ package org.squiddev.plethora.integration;
 import com.mojang.authlib.GameProfile;
 import dan200.computercraft.api.lua.LuaException;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.squiddev.plethora.api.IPlayerOwnable;
@@ -50,13 +50,13 @@ public class EntityIdentifier implements ConstantReference<EntityIdentifier> {
 		return this;
 	}
 
-	public EntityLivingBase getEntity() throws LuaException {
+	public LivingEntity getEntity() throws LuaException {
 		Entity entity = FMLCommonHandler.instance()
 			.getMinecraftServerInstance()
 			.getEntityFromUuid(getId());
 
-		if (!(entity instanceof EntityLivingBase)) throw new LuaException("Cannot find entity");
-		return (EntityLivingBase) entity;
+		if (!(entity instanceof LivingEntity)) throw new LuaException("Cannot find entity");
+		return (LivingEntity) entity;
 	}
 
 	@Override

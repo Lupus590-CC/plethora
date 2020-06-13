@@ -4,12 +4,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.gameplay.registry.BasicMessage;
 
 public class MessageMinecartSlot implements BasicMessage {
@@ -20,7 +20,7 @@ public class MessageMinecartSlot implements BasicMessage {
 	public int slot;
 	private int flags;
 	public ItemStack stack;
-	public NBTTagCompound tag;
+	public CompoundNBT tag;
 
 	public MessageMinecartSlot() {
 	}
@@ -35,7 +35,7 @@ public class MessageMinecartSlot implements BasicMessage {
 		flags |= FLAG_STACK;
 	}
 
-	public void setTag(NBTTagCompound tag) {
+	public void setTag(CompoundNBT tag) {
 		this.tag = tag;
 		flags |= FLAG_TAG;
 	}
@@ -69,7 +69,7 @@ public class MessageMinecartSlot implements BasicMessage {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void onMessage(final MessageContext ctx) {
 		// We schedule this to run on the main thread so the entity is actually loaded by this point.
 		// After all, this is what the S0EPacketSpawnObject packet does.

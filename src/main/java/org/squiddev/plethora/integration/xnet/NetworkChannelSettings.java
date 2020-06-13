@@ -10,9 +10,9 @@ import mcjty.xnet.api.gui.IEditorGui;
 import mcjty.xnet.api.gui.IndicatorIcon;
 import mcjty.xnet.api.keys.ConsumerId;
 import mcjty.xnet.api.keys.SidedConsumer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -91,11 +91,11 @@ class NetworkChannelSettings implements IChannelSettings, IWiredElement {
 
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag) {
+	public void readFromNBT(CompoundNBT tag) {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag) {
+	public void writeToNBT(CompoundNBT tag) {
 	}
 
 	@Override
@@ -159,14 +159,14 @@ class NetworkChannelSettings implements IChannelSettings, IWiredElement {
 
 	private static final class ConnectorNode {
 		private final ConsumerId id;
-		private final EnumFacing side;
+		private final Direction side;
 		private final NetworkConnectorSettings settings;
 		private final IWiredNode rootNode;
 
 		private TileEntity tile;
 		private IWiredNode node;
 
-		private ConnectorNode(ConsumerId id, EnumFacing side, NetworkConnectorSettings settings, IWiredNode rootNode) {
+		private ConnectorNode(ConsumerId id, Direction side, NetworkConnectorSettings settings, IWiredNode rootNode) {
 			this.id = id;
 			this.side = side;
 			this.settings = settings;

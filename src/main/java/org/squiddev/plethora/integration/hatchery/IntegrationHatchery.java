@@ -16,7 +16,7 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -73,7 +73,7 @@ public final class IntegrationHatchery {
 			if (!AnimalNet.hasCapturedAnimal(stack)) return null;
 
 			//Check for an entity ID
-			NBTTagCompound entityData = AnimalNet.getCapturedAnimalNBT(stack);
+			CompoundNBT entityData = AnimalNet.getCapturedAnimalNBT(stack);
 			if (!entityData.hasKey("id", Constants.NBT.TAG_STRING)) return null;
 
 			return EntityList.createEntityFromNBT(entityData, location.getWorld());
@@ -103,7 +103,7 @@ public final class IntegrationHatchery {
 		@Override
 		protected Entity spawn(@Nonnull ItemStack stack, @Nonnull HatcheryEgg item, @Nonnull IWorldLocation location) {
 			//Check for a captured entity
-			NBTTagCompound entityData = ItemStackEntityNBTHelper.getEntityTagFromStack(stack);
+			CompoundNBT entityData = ItemStackEntityNBTHelper.getEntityTagFromStack(stack);
 			if (entityData == null || !entityData.hasKey("id", Constants.NBT.TAG_STRING)) return null;
 
 			//Due to Hatchery's `ItemStackEntityNBTHelper` having a `saveAll` param, we may need to

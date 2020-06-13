@@ -1,9 +1,9 @@
 package org.squiddev.plethora.core.capabilities;
 
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.module.AbstractModuleHandler;
 import org.squiddev.plethora.gameplay.Plethora;
@@ -30,7 +30,7 @@ public final class DefaultModuleHandler extends AbstractModuleHandler {
 
 	@Nonnull
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public Pair<IBakedModel, Matrix4f> getModel(float delta) {
 		return Pair.of(getMesher().getModelManager().getMissingModel(), getIdentity());
 	}

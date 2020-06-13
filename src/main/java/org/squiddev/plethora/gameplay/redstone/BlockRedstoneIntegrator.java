@@ -6,7 +6,7 @@ import dan200.computercraft.shared.common.TileGeneric;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * We extends {@link BlockGeneric} as the bundled redstone provider requires it:
- * {@link ComputerCraftAPI#getBundledRedstoneOutput(World, BlockPos, EnumFacing)}.
+ * {@link ComputerCraftAPI#getBundledRedstoneOutput(World, BlockPos, Direction)}.
  */
 @Mod.EventBusSubscriber(modid = Plethora.ID)
 public class BlockRedstoneIntegrator extends BlockGeneric {
@@ -42,7 +42,7 @@ public class BlockRedstoneIntegrator extends BlockGeneric {
 		setCreativeTab(Plethora.getCreativeTab());
 	}
 
-	protected IBlockState getDefaultBlockState(int meta, EnumFacing direction) {
+	protected IBlockState getDefaultBlockState(int meta, Direction direction) {
 		return blockState.getBaseState();
 	}
 

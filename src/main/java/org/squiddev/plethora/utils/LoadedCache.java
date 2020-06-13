@@ -1,7 +1,6 @@
 package org.squiddev.plethora.utils;
 
-import baubles.common.Baubles;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.ModList;
 import vazkii.botania.common.lib.LibMisc;
 
 public final class LoadedCache {
@@ -13,8 +12,9 @@ public final class LoadedCache {
 	}
 
 	private static void load() {
-		hasBotania = Loader.isModLoaded(LibMisc.MOD_ID);
-		hasBaubles = Loader.isModLoaded(Baubles.MODID);
+		hasBotania = ModList.get().isLoaded(LibMisc.MOD_ID);
+//		hasBaubles = ModList.get().isLoaded(Curios.MODID);
+		hasBaubles = false;
 		loaded = true;
 	}
 

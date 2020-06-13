@@ -13,8 +13,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.IIngredientFactory;
@@ -73,9 +73,9 @@ public class IngredientEnchanted extends Ingredient {
 	public boolean apply(@Nullable ItemStack target) {
 		if (target == null || target.isEmpty()) return false;
 
-		NBTTagList enchantments = target.getItem() == Items.ENCHANTED_BOOK ? ItemEnchantedBook.getEnchantments(target) : target.getEnchantmentTagList();
+		ListNBT enchantments = target.getItem() == Items.ENCHANTED_BOOK ? ItemEnchantedBook.getEnchantments(target) : target.getEnchantmentTagList();
 		for (int i = 0; i < enchantments.tagCount(); ++i) {
-			NBTTagCompound tag = enchantments.getCompoundTagAt(i);
+			CompoundNBT tag = enchantments.getCompoundTagAt(i);
 			Enchantment itemEnchant = Enchantment.getEnchantmentByID(tag.getShort("id"));
 			if (itemEnchant == enchantment) return (int) tag.getShort("lvl") >= minLevel;
 		}

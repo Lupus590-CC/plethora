@@ -1,6 +1,6 @@
 package org.squiddev.plethora.gameplay.modules;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.squiddev.plethora.utils.MatrixHelpers;
@@ -51,7 +51,7 @@ public enum ManipulatorType implements IStringSerializable {
 		return boxes.length;
 	}
 
-	public AxisAlignedBB[] boxesFor(EnumFacing facing) {
+	public AxisAlignedBB[] boxesFor(Direction facing) {
 		AxisAlignedBB[] cached = facingBoxes[facing.ordinal()];
 		if (cached != null) return cached;
 

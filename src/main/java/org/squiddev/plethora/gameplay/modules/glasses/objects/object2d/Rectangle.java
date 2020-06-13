@@ -5,8 +5,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.api.method.MethodResult;
 import org.squiddev.plethora.api.method.wrapper.FromTarget;
 import org.squiddev.plethora.api.method.wrapper.PlethoraMethod;
@@ -76,7 +76,7 @@ public class Rectangle extends ColourableObject implements Positionable2D {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void draw(CanvasClient canvas) {
 		setupFlat();
 

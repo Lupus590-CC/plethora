@@ -3,8 +3,8 @@ package org.squiddev.plethora.integration.vanilla.meta;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemBanner;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.BannerPattern;
 import org.squiddev.plethora.api.Injects;
 import org.squiddev.plethora.api.meta.ItemStackMetaProvider;
@@ -26,13 +26,13 @@ public final class MetaItemBanner extends ItemStackMetaProvider<ItemBanner> {
 	public Map<String, ?> getMeta(@Nonnull ItemStack stack, @Nonnull ItemBanner banner) {
 		List<Map<String, ?>> out;
 
-		NBTTagCompound tag = stack.getSubCompound("BlockEntityTag");
+		CompoundNBT tag = stack.getSubCompound("BlockEntityTag");
 		if (tag != null && tag.hasKey("Patterns")) {
-			NBTTagList nbttaglist = tag.getTagList("Patterns", 10);
+			ListNBT listNBT = tag.getTagList("Patterns", 10);
 
-			out = new ArrayList<>(nbttaglist.tagCount());
-			for (int i = 0; i < nbttaglist.tagCount() && i < 6; ++i) {
-				NBTTagCompound patternTag = nbttaglist.getCompoundTagAt(i);
+			out = new ArrayList<>(listNBT.tagCount());
+			for (int i = 0; i < listNBT.tagCount() && i < 6; ++i) {
+				CompoundNBT patternTag = listNBT.getCompoundTagAt(i);
 
 				EnumDyeColor color = EnumDyeColor.byDyeDamage(patternTag.getInteger("Color"));
 				BannerPattern pattern = getPatternByID(patternTag.getString("Pattern"));
@@ -58,9 +58,9 @@ public final class MetaItemBanner extends ItemStackMetaProvider<ItemBanner> {
 	@Nonnull
 	@Override
 	public ItemStack getExample() {
-		NBTTagList patterns = new NBTTagList();
+		ListNBT patterns = new ListNBT();
 
-		NBTTagCompound pattern1 = new NBTTagCompound();
+		CompoundNBT pattern1 = new CompoundNBT();
 		pattern1.setString("Pattern", BannerPattern.CREEPER.getHashname());
 		pattern1.setInteger("Color", 5);
 

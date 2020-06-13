@@ -1,6 +1,6 @@
 package org.squiddev.plethora.utils;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.*;
@@ -104,7 +104,7 @@ public final class WorldDummy extends World {
 		}
 
 		@Override
-		public void saveWorldInfoWithPlayer(WorldInfo worldInformation, NBTTagCompound tagCompound) {
+		public void saveWorldInfoWithPlayer(WorldInfo worldInformation, CompoundNBT tagCompound) {
 		}
 
 		@Override

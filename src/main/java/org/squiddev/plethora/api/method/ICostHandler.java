@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
  * You should aim to regenerate the energy level when possible
  *
  * @see org.squiddev.plethora.api.Constants#COST_HANDLER_CAPABILITY
- * @see IMethodRegistry#getCostHandler(ICapabilityProvider, net.minecraft.util.EnumFacing)
+ * @see IMethodRegistry#getCostHandler(ICapabilityProvider, net.minecraft.util.Direction)
  */
 @ThreadSafe
 public interface ICostHandler {

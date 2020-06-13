@@ -4,7 +4,7 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class PeripheralProvider implements IPeripheralProvider {
 	@Override
-	public IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos blockPos, @Nonnull EnumFacing side) {
+	public IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos blockPos, @Nonnull Direction side) {
 		TileEntity te = world.getTileEntity(blockPos);
 		if (te == null || te.isInvalid()) return null;
 

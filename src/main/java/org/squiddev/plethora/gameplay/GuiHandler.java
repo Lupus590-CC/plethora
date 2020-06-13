@@ -4,13 +4,13 @@ import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.gameplay.client.gui.GuiKeyboard;
 import org.squiddev.plethora.gameplay.client.gui.GuiMinecartComputer;
 import org.squiddev.plethora.gameplay.client.gui.GuiNeuralInterface;
@@ -29,7 +29,7 @@ public class GuiHandler implements IGuiHandler {
 	private static final int GUI_FLAG_ENTITY = 1;
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		switch (id) {
 			case GUI_NEURAL: {
@@ -75,13 +75,13 @@ public class GuiHandler implements IGuiHandler {
 		return null;
 	}
 
-	private static EntityLivingBase getEntity(EntityPlayer player, World world, int flag, int id) {
+	private static LivingEntity getEntity(EntityPlayer player, World world, int flag, int id) {
 		switch (flag) {
 			case GUI_FLAG_PLAYER:
 				return player;
 			case GUI_FLAG_ENTITY: {
 				Entity entity = world.getEntityByID(id);
-				return entity instanceof EntityLivingBase ? (EntityLivingBase) entity : null;
+				return entity instanceof LivingEntity ? (LivingEntity) entity : null;
 			}
 			default:
 				Plethora.LOG.error("Unknown flag " + flag);
@@ -90,7 +90,7 @@ public class GuiHandler implements IGuiHandler {
 	}
 
 	private static ContainerNeuralInterface getNeuralContainer(EntityPlayer player, World world, int flag, int id) {
-		EntityLivingBase entity = getEntity(player, world, flag, id);
+		LivingEntity entity = getEntity(player, world, flag, id);
 		if (entity == null) return null;
 
 		ItemStack stack = NeuralHelpers.getStack(entity);
@@ -107,7 +107,7 @@ public class GuiHandler implements IGuiHandler {
 		player.openGui(Plethora.instance, GUI_NEURAL, world, GUI_FLAG_PLAYER, 0, 0);
 	}
 
-	public static void openNeuralEntity(EntityPlayer player, World world, EntityLivingBase entity) {
+	public static void openNeuralEntity(EntityPlayer player, World world, LivingEntity entity) {
 		player.openGui(Plethora.instance, GUI_NEURAL, world, GUI_FLAG_ENTITY, entity.getEntityId(), 0);
 	}
 

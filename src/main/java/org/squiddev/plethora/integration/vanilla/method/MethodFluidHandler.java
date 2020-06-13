@@ -1,7 +1,7 @@
 package org.squiddev.plethora.integration.vanilla.method;
 
 import dan200.computercraft.api.lua.LuaException;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -30,7 +30,7 @@ public final class MethodFluidHandler extends BasicMethod<ICapabilityProvider> {
 		ICapabilityProvider target = context.getTarget();
 		if (target.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) return true;
 
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		for (Direction facing : Direction.VALUES) {
 			if (target.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing)) return true;
 		}
 
@@ -41,10 +41,10 @@ public final class MethodFluidHandler extends BasicMethod<ICapabilityProvider> {
 	@Override
 	public MethodResult apply(@Nonnull final IUnbakedContext<ICapabilityProvider> context, @Nonnull Object[] args) throws LuaException {
 		String side = optString(args, 0, null);
-		final EnumFacing facing;
+		final Direction facing;
 		if (side != null) {
 			side = side.toLowerCase();
-			facing = EnumFacing.byName(side);
+			facing = Direction.byName(side);
 			if (facing == null) throw new LuaException("Unknown side '" + side + "'");
 		} else {
 			facing = null;
@@ -72,7 +72,7 @@ public final class MethodFluidHandler extends BasicMethod<ICapabilityProvider> {
 		});
 	}
 
-	private static IFluidTankProperties[] getTanks(ICapabilityProvider provider, EnumFacing side) {
+	private static IFluidTankProperties[] getTanks(ICapabilityProvider provider, Direction side) {
 		IFluidHandler handler = provider.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
 		if (handler == null) return null;
 

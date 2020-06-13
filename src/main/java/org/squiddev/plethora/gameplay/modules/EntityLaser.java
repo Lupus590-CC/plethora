@@ -5,13 +5,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.*;
@@ -21,8 +21,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.api.IPlayerOwnable;
 import org.squiddev.plethora.gameplay.ConfigGameplay;
 import org.squiddev.plethora.gameplay.PlethoraFakePlayer;
@@ -119,7 +119,7 @@ public final class EntityLaser extends Entity implements IProjectile, IPlayerOwn
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void setVelocity(double x, double y, double z) {
 		motionX = x;
 		motionY = y;
@@ -132,7 +132,7 @@ public final class EntityLaser extends Entity implements IProjectile, IPlayerOwn
 	}
 
 	@Override
-	public void writeEntityToNBT(@Nonnull NBTTagCompound tag) {
+	public void writeEntityToNBT(@Nonnull CompoundNBT tag) {
 		PlayerHelpers.writeProfile(tag, shooterOwner);
 		if (shooterPos != null) tag.setTag("shooterPos", shooterPos.serializeNBT());
 
@@ -140,7 +140,7 @@ public final class EntityLaser extends Entity implements IProjectile, IPlayerOwn
 	}
 
 	@Override
-	public void readEntityFromNBT(@Nonnull NBTTagCompound tag) {
+	public void readEntityFromNBT(@Nonnull CompoundNBT tag) {
 		shooter = null;
 		shooterPlayer = null;
 		shooterOwner = PlayerHelpers.readProfile(tag);
@@ -186,10 +186,10 @@ public final class EntityLaser extends Entity implements IProjectile, IPlayerOwn
 				Entity shooter = getShooter();
 
 				double closestDistance = nextPosition.squareDistanceTo(position);
-				EntityLivingBase closestEntity = null;
+				LivingEntity closestEntity = null;
 
 				for (Entity other : collisions) {
-					if (other.canBeCollidedWith() && (other != shooter || ticksExisted >= 5) && other instanceof EntityLivingBase) {
+					if (other.canBeCollidedWith() && (other != shooter || ticksExisted >= 5) && other instanceof LivingEntity) {
 						if (
 							other instanceof EntityPlayer && shooter instanceof EntityPlayer &&
 								!((EntityPlayer) shooter).canAttackPlayer((EntityPlayer) other)
@@ -204,7 +204,7 @@ public final class EntityLaser extends Entity implements IProjectile, IPlayerOwn
 						if (hit != null) {
 							double distanceSq = position.squareDistanceTo(hit.hitVec);
 							if (distanceSq < closestDistance) {
-								closestEntity = (EntityLivingBase) other;
+								closestEntity = (LivingEntity) other;
 								closestDistance = distanceSq;
 								nextPosition = hit.hitVec;
 							}
@@ -284,7 +284,7 @@ public final class EntityLaser extends Entity implements IProjectile, IPlayerOwn
 						((BlockTNT) block).explode(
 							world, position,
 							blockState.withProperty(BlockTNT.EXPLODE, Boolean.TRUE),
-							shooter instanceof EntityLivingBase ? (EntityLivingBase) shooter : getShooterPlayer()
+							shooter instanceof LivingEntity ? (LivingEntity) shooter : getShooterPlayer()
 						);
 
 						world.setBlockToAir(position);
@@ -321,7 +321,7 @@ public final class EntityLaser extends Entity implements IProjectile, IPlayerOwn
 			}
 			case ENTITY: {
 				Entity entity = collision.entityHit;
-				if (entity instanceof EntityLivingBase) {
+				if (entity instanceof LivingEntity) {
 					// Ensure the player is setup correctly
 					syncPositions(true);
 

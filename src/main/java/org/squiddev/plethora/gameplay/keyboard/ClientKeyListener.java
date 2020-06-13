@@ -6,8 +6,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.input.Keyboard;
 import org.squiddev.plethora.gameplay.Plethora;
 
@@ -28,7 +28,7 @@ public final class ClientKeyListener {
 	}
 
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void onInputEvent(InputEvent.KeyInputEvent event) {
 		if (!listening) {
 			// If we're not listening then clear the lookup of keys which are down and exit.
@@ -62,7 +62,7 @@ public final class ClientKeyListener {
 	}
 
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void onClientTick(TickEvent.ClientTickEvent event) {
 		if (event.phase != TickEvent.Phase.END) return;
 
@@ -96,7 +96,7 @@ public final class ClientKeyListener {
 
 		public long lastTime;
 
-		@SideOnly(Side.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		private KeyDown(int key, char character) {
 			this.key = key;
 			this.character = character;

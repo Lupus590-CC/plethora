@@ -3,7 +3,7 @@ package org.squiddev.plethora.integration.vanilla;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -89,7 +89,7 @@ public final class IntegrationVanilla {
 
 	@SubscribeEvent
 	public static void entityTick(LivingEvent.LivingUpdateEvent event) {
-		EntityLivingBase livingBase = event.getEntityLiving();
+		LivingEntity livingBase = event.getEntityLiving();
 		if (livingBase instanceof EntityLiving) {
 			DisableAI.IDisableAIHandler handler = livingBase.getCapability(DisableAI.DISABLE_AI_CAPABILITY, null);
 			if (handler != null) handler.update();

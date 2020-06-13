@@ -3,7 +3,7 @@ package org.squiddev.plethora.gameplay.modules.methods;
 import com.mojang.authlib.GameProfile;
 import dan200.computercraft.api.lua.LuaException;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -99,7 +99,7 @@ public final class MethodsChat {
 	@PlethoraMethod(module = PlethoraModules.CHAT_S, doc = "-- Send a message to yourself")
 	public static void tell(@FromSubtarget EntityIdentifier entity, String message) throws LuaException {
 		validateMessage(message);
-		EntityLivingBase sender = entity.getEntity();
+		LivingEntity sender = entity.getEntity();
 		sender.sendMessage(ForgeHooks.newChatWithLinks(message));
 	}
 

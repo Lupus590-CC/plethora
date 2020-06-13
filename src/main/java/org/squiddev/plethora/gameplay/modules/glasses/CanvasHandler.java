@@ -7,14 +7,14 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.gameplay.Plethora;
 import org.squiddev.plethora.gameplay.modules.PlethoraModules;
 import org.squiddev.plethora.gameplay.neural.NeuralHelpers;
@@ -100,22 +100,22 @@ public final class CanvasHandler {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	private static CanvasClient getCanvas() {
 		EntityPlayer playerMP = Minecraft.getMinecraft().player;
 		ItemStack stack = NeuralHelpers.getStack(playerMP);
 
 		if (stack.isEmpty()) return null;
 
-		NBTTagCompound tag = stack.getTagCompound();
+		CompoundNBT tag = stack.getTagCompound();
 		if (tag == null || !tag.hasKey(MODULE_DATA, NBT.TAG_COMPOUND)) return null;
 
-		NBTTagCompound modules = tag.getCompoundTag(MODULE_DATA);
+		CompoundNBT modules = tag.getCompoundTag(MODULE_DATA);
 		if (!modules.hasKey(PlethoraModules.GLASSES_S, NBT.TAG_COMPOUND)) {
 			return null;
 		}
 
-		NBTTagCompound data = modules.getCompoundTag(PlethoraModules.GLASSES_S);
+		CompoundNBT data = modules.getCompoundTag(PlethoraModules.GLASSES_S);
 		if (!data.hasKey("id", NBT.TAG_ANY_NUMERIC)) return null;
 
 		int id = data.getInteger("id");
@@ -123,7 +123,7 @@ public final class CanvasHandler {
 	}
 
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void render2DOverlay(RenderGameOverlayEvent.Post event) {
 		if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
 
@@ -154,7 +154,7 @@ public final class CanvasHandler {
 	}
 
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void onWorldRender(RenderWorldLastEvent event) {
 		CanvasClient canvas = getCanvas();
 		if (canvas == null) return;

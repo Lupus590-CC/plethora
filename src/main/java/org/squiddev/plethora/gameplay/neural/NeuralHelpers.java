@@ -7,11 +7,11 @@ import baubles.common.Baubles;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional;
@@ -56,7 +56,7 @@ public final class NeuralHelpers {
 	public static final int BACK = 2;
 
 	@Nullable
-	public static TinySlot getSlot(EntityLivingBase entity) {
+	public static TinySlot getSlot(LivingEntity entity) {
 		ItemStack stack = entity.getItemStackFromSlot(ARMOR_SLOT);
 
 		if (!stack.isEmpty() && stack.getItem() == Registration.itemNeuralInterface) {
@@ -94,7 +94,7 @@ public final class NeuralHelpers {
 	}
 
 	@Nonnull
-	public static ItemStack getStack(EntityLivingBase entity) {
+	public static ItemStack getStack(LivingEntity entity) {
 		TinySlot slot = getSlot(entity);
 		return slot == null ? ItemStack.EMPTY : slot.getStack();
 	}
@@ -228,7 +228,7 @@ public final class NeuralHelpers {
 
 		@Nonnull
 		@Override
-		public NBTTagCompound getData() {
+		public CompoundNBT getData() {
 			return computer.getModuleData(module);
 		}
 

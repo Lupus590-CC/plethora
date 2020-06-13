@@ -1,15 +1,15 @@
 package org.squiddev.plethora.api.module;
 
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import javax.vecmath.Matrix4f;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.method.IContextBuilder;
 
 import javax.annotation.Nonnull;
-import javax.vecmath.Matrix4f;
 
 /**
  * A capability which provides a module
@@ -39,6 +39,6 @@ public interface IModuleHandler {
 	 * @see net.minecraft.client.renderer.ItemModelMesher#getItemModel(ItemStack)
 	 */
 	@Nonnull
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	Pair<IBakedModel, Matrix4f> getModel(float delta);
 }

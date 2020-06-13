@@ -1,6 +1,6 @@
 package org.squiddev.plethora.api.module;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import org.squiddev.plethora.api.IWorldLocation;
 
 import javax.annotation.Nonnull;
@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 public interface IModuleAccess {
 	/**
 	 * The owner of this module container. This is probably a {@link net.minecraft.tileentity.TileEntity} or
-	 * {@link net.minecraft.entity.EntityLivingBase}.
+	 * {@link net.minecraft.entity.LivingEntity}.
 	 *
 	 * @return The module's owner. This is constant for the lifetime of the module access.
 	 */
@@ -48,7 +48,7 @@ public interface IModuleAccess {
 	 * @see #markDataDirty()
 	 */
 	@Nonnull
-	NBTTagCompound getData();
+	CompoundNBT getData();
 
 	/**
 	 * Mark the module specific data as dirty

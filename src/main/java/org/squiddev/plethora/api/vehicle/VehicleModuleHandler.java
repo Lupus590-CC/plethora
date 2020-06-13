@@ -1,7 +1,7 @@
 package org.squiddev.plethora.api.vehicle;
 
 import net.minecraft.item.Item;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import org.squiddev.plethora.api.Constants;
@@ -25,13 +25,13 @@ public class VehicleModuleHandler extends BasicModuleHandler {
 	}
 
 	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing enumFacing) {
-		return super.hasCapability(capability, enumFacing) || capability == Constants.VEHICLE_UPGRADE_HANDLER_CAPABILITY;
+	public boolean hasCapability(@Nonnull Capability<?> capability, Direction direction) {
+		return super.hasCapability(capability, direction) || capability == Constants.VEHICLE_UPGRADE_HANDLER_CAPABILITY;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing enumFacing) {
+	public <T> T getCapability(@Nonnull Capability<T> capability, Direction direction) {
 		if (capability == Constants.VEHICLE_UPGRADE_HANDLER_CAPABILITY) {
 			IVehicleUpgradeHandler upgrade = handler;
 			if (upgrade == null) {
@@ -40,6 +40,6 @@ public class VehicleModuleHandler extends BasicModuleHandler {
 			return (T) upgrade;
 		}
 
-		return super.getCapability(capability, enumFacing);
+		return super.getCapability(capability, direction);
 	}
 }

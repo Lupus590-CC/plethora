@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import org.squiddev.plethora.api.IWorldLocation;
 import org.squiddev.plethora.api.Injects;
@@ -45,7 +45,7 @@ public final class IntegrationIF {
 		public ItemStack getExample() {
 			ItemStack stack = new ItemStack(ItemRegistry.mobImprisonmentToolItem);
 			Entity entity = new EntitySquid(WorldDummy.INSTANCE);
-			NBTTagCompound tag = new NBTTagCompound();
+			CompoundNBT tag = new CompoundNBT();
 			tag.setString("entity", EntityList.getKey(entity).toString());
 			tag.setInteger("id", EntityList.getID(entity.getClass()));
 			entity.writeToNBT(tag);

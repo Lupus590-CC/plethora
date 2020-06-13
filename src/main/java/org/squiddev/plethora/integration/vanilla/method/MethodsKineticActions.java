@@ -1,7 +1,7 @@
 package org.squiddev.plethora.integration.vanilla.method;
 
 import dan200.computercraft.api.lua.LuaException;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
@@ -32,7 +32,7 @@ public final class MethodsKineticActions {
 			"particular hand (\"left\" or \"right\"). The duration is in ticks, or 1/20th of a second."
 	)
 	public static MethodResult use(
-		@FromSubtarget(ContextKeys.ORIGIN) EntityLivingBase entity,
+		@FromSubtarget(ContextKeys.ORIGIN) LivingEntity entity,
 		@Optional @FromContext(ContextKeys.ORIGIN) IPlayerOwnable ownable,
 		@Optional(defInt = 0) int duration, @Optional String hand
 	) throws LuaException {
@@ -79,7 +79,7 @@ public final class MethodsKineticActions {
 		doc = "function():boolean, string|nil -- Left click with this item. Returns the action taken."
 	)
 	public static Object[] swing(
-		@FromSubtarget(ContextKeys.ORIGIN) EntityLivingBase entity,
+		@FromSubtarget(ContextKeys.ORIGIN) LivingEntity entity,
 		@Optional @FromContext(ContextKeys.ORIGIN) IPlayerOwnable ownable
 	) throws LuaException {
 		EntityPlayerMP player;

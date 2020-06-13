@@ -6,8 +6,8 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.gameplay.Plethora;
 import org.squiddev.plethora.gameplay.client.entity.RenderLaser;
 import org.squiddev.plethora.gameplay.client.entity.RenderMinecartComputer;
@@ -27,7 +27,7 @@ public final class ClientRegistration {
 	}
 
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void registerModels(ModelRegistryEvent event) {
 		Helpers.setupModel(itemNeuralInterface, 0, "neuralInterface");
 		Helpers.setupModel(itemNeuralConnector, 0, "neuralConnector");
@@ -44,14 +44,14 @@ public final class ClientRegistration {
 		Helpers.setupModel(Item.getItemFromBlock(blockRedstoneIntegrator), 0, "redstone_integrator");
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void preInit() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileManipulator.class, new RenderManipulator());
 		RenderingRegistry.registerEntityRenderingHandler(EntityMinecartComputer.class, RenderMinecartComputer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityLaser.class, RenderLaser::new);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void init() {
 		RenderSquidOverlay.init();
 		RenderInterfaceLiving.init();

@@ -10,7 +10,7 @@ import dan200.computercraft.api.turtle.event.TurtleRefuelEvent;
 import dan200.computercraft.shared.peripheral.common.ItemPeripheralBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -19,8 +19,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.api.Constants;
 import org.squiddev.plethora.api.IPeripheralHandler;
 import org.squiddev.plethora.api.TurtleWorldLocation;
@@ -105,7 +105,7 @@ public final class IntegrationComputerCraft {
 	}
 
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Optional.Method(modid = ComputerCraft.MOD_ID)
 	public static void onModelBakeEvent(ModelBakeEvent event) {
 		RenderHelpers.loadModel(event, "computercraft", "wireless_modem_off");
@@ -126,7 +126,7 @@ public final class IntegrationComputerCraft {
 		}
 
 		@Override
-		public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing enumFacing) {
+		public boolean hasCapability(@Nonnull Capability<?> capability, Direction direction) {
 			if (capability == Constants.PERIPHERAL_HANDLER_CAPABILITY) return getHandler() != null;
 			if (capability == Constants.VEHICLE_UPGRADE_HANDLER_CAPABILITY) return getVehicle() != null;
 			return false;
@@ -134,7 +134,7 @@ public final class IntegrationComputerCraft {
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing enumFacing) {
+		public <T> T getCapability(@Nonnull Capability<T> capability, Direction direction) {
 			if (capability == Constants.PERIPHERAL_HANDLER_CAPABILITY) return (T) getHandler();
 			if (capability == Constants.VEHICLE_UPGRADE_HANDLER_CAPABILITY) return (T) getVehicle();
 			return null;

@@ -1,7 +1,7 @@
 package org.squiddev.plethora.gameplay.neural;
 
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -45,7 +45,7 @@ public class ItemNeuralConnector extends ItemBase {
 	}
 
 	@Override
-	public boolean itemInteractionForEntity(@Nonnull ItemStack stack, EntityPlayer player, EntityLivingBase entity, EnumHand hand) {
+	public boolean itemInteractionForEntity(@Nonnull ItemStack stack, EntityPlayer player, LivingEntity entity, EnumHand hand) {
 		if (entity instanceof EntityPlayer) return false;
 
 		TinySlot neuralStack = NeuralHelpers.getSlot(entity);

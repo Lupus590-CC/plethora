@@ -9,7 +9,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -42,12 +42,12 @@ public class CraftingNeuralInterface extends ShapedOreRecipe {
 		String label = ComputerCraft.Items.pocketComputer.getLabel(old);
 
 		// Copy across key properties
-		NBTTagCompound tag = ItemBase.getTag(output);
+		CompoundNBT tag = ItemBase.getTag(output);
 		if (label != null) output.setStackDisplayName(label);
 		if (id >= 0) tag.setInteger(COMPUTER_ID, id);
 
 		// Copy across custom ROM if required
-		NBTTagCompound fromTag = old.getTagCompound();
+		CompoundNBT fromTag = old.getTagCompound();
 		if (fromTag != null && fromTag.hasKey("rom_id")) {
 			tag.setTag("rom_id", fromTag.getTag("rom_id"));
 		}

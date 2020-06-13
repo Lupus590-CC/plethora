@@ -1,7 +1,7 @@
 package org.squiddev.plethora.api.vehicle;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
 
@@ -28,7 +28,7 @@ public interface IVehicleAccess {
 	 * @see #markDataDirty()
 	 */
 	@Nonnull
-	NBTTagCompound getData();
+	CompoundNBT getData();
 
 	/**
 	 * Mark the module specific data as dirty

@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants;
@@ -58,13 +58,13 @@ public abstract class ItemEntityStorageMetaProvider<T extends Item> extends Item
 	protected abstract Map<String, ?> getBasicDetails(@Nonnull ItemStack stack, @Nonnull T item);
 
 	@Nonnull
-	public static Map<String, ?> getBasicDetails(@Nullable NBTTagCompound entityData) {
+	public static Map<String, ?> getBasicDetails(@Nullable CompoundNBT entityData) {
 		if (entityData == null || !entityData.hasKey("id", Constants.NBT.TAG_STRING)) return Collections.emptyMap();
 		return getBasicDetails(new ResourceLocation(entityData.getString("id")), entityData);
 	}
 
 	@Nonnull
-	protected static Map<String, ?> getBasicDetails(@Nonnull ResourceLocation id, @Nullable NBTTagCompound entityData) {
+	protected static Map<String, ?> getBasicDetails(@Nonnull ResourceLocation id, @Nullable CompoundNBT entityData) {
 		return getBasicDetails(
 			id,
 			entityData != null && entityData.hasKey("CustomName", Constants.NBT.TAG_STRING) ? entityData.getString("CustomName") : null

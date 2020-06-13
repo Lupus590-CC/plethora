@@ -1,7 +1,7 @@
 package org.squiddev.plethora.gameplay.modules.methods;
 
 import dan200.computercraft.api.lua.LuaException;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import org.squiddev.plethora.api.meta.TypedMeta;
 import org.squiddev.plethora.api.method.IContext;
 import org.squiddev.plethora.api.method.wrapper.FromSubtarget;
@@ -30,7 +30,7 @@ public final class MethodsIntrospection {
 		module = { PlethoraModules.INTROSPECTION_S, PlethoraModules.SENSOR_S },
 		doc = "-- Get this entity's UUID."
 	)
-	public static TypedMeta<EntityLivingBase, ?> getMetaOwner(@FromSubtarget EntityIdentifier identifier, @Nonnull IContext<IModuleContainer> context) throws LuaException {
+	public static TypedMeta<LivingEntity, ?> getMetaOwner(@FromSubtarget EntityIdentifier identifier, @Nonnull IContext<IModuleContainer> context) throws LuaException {
 		return context.makePartialChild(identifier.getEntity()).getMeta();
 	}
 }

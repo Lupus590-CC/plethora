@@ -10,8 +10,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 import org.squiddev.plethora.gameplay.client.FramebufferGlasses;
 import org.squiddev.plethora.gameplay.client.OpenGlHelper;
@@ -117,7 +117,7 @@ public class Item2D extends BaseObject implements Scalable, ItemObject, Position
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void draw(CanvasClient canvas) {
 
 		RenderState state = RenderState.get();

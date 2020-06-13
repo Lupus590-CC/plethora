@@ -42,7 +42,7 @@ public final class Constants {
 	 *
 	 * Provide this capability for custom cost handling.
 	 *
-	 * @see org.squiddev.plethora.api.method.IMethodRegistry#getCostHandler(ICapabilityProvider, net.minecraft.util.EnumFacing)
+	 * @see org.squiddev.plethora.api.method.IMethodRegistry#getCostHandler(ICapabilityProvider, net.minecraft.util.Direction)
 	 * @see ICostHandler
 	 */
 	@CapabilityInject(ICostHandler.class)

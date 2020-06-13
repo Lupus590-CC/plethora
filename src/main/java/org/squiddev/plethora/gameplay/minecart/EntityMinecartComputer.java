@@ -1,53 +1,46 @@
 package org.squiddev.plethora.gameplay.minecart;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.platform.GlStateManager;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.computer.ComputerSide;
-import dan200.computercraft.shared.computer.blocks.BlockCommandComputer;
 import dan200.computercraft.shared.computer.blocks.BlockComputer;
-import dan200.computercraft.shared.computer.blocks.ComputerState;
 import dan200.computercraft.shared.computer.core.*;
 import dan200.computercraft.shared.computer.items.ComputerItemFactory;
 import dan200.computercraft.shared.computer.items.IComputerItem;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.entity.item.EntityMinecartEmpty;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.item.minecart.MinecartEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.squiddev.plethora.api.IPlayerOwnable;
@@ -68,7 +61,7 @@ import javax.vecmath.Vector4f;
 import static org.squiddev.plethora.api.Constants.VEHICLE_UPGRADE_HANDLER_CAPABILITY;
 
 @Mod.EventBusSubscriber(modid = Plethora.ID)
-public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwnable {
+public class EntityMinecartComputer extends MinecartEntity implements IPlayerOwnable {
 	private static final ComputerFamily[] FAMILIES = ComputerFamily.values();
 	private static final ComputerState[] STATES = ComputerState.values();
 
@@ -116,24 +109,22 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 	 */
 	final VehicleAccess[] accesses = new VehicleAccess[SLOTS];
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	private Integer lastClientId;
 
-	public EntityMinecartComputer(World worldIn) {
-		super(worldIn);
-		setSize(0.98F, 0.98F);
+	public EntityMinecartComputer(World worldIn, double x, double y, double z) {
+		super(EntityType.MINECART, worldIn, x, y, z);
+//		setSize(0.98F, 0.98F);
 
 		// Initialise the upgrades
 		for (int i = 0; i < SLOTS; i++) accesses[i] = new VehicleAccess(this);
 	}
 
-	public EntityMinecartComputer(EntityMinecartEmpty minecart, int id, String label, ComputerFamily family, GameProfile profile) {
-		this(minecart.getEntityWorld());
+	public EntityMinecartComputer(MinecartEntity minecart, int id, String label, ComputerFamily family, GameProfile profile) {
+		this(minecart.getEntityWorld(), minecart.getPosX(), minecart.getPosY(), minecart.getPosZ());
 
-		setPositionAndRotation(minecart.posX, minecart.posY, minecart.posZ, minecart.rotationYaw, minecart.rotationPitch);
-		motionX = minecart.motionX;
-		motionY = minecart.motionY;
-		motionZ = minecart.motionZ;
+		setPositionAndRotation(minecart.getPosX(), minecart.getPosY(), minecart.getPosZ(), minecart.rotationYaw, minecart.rotationPitch);
+		setMotion(minecart.getMotion());
 
 		setCurrentCartSpeedCapOnRail(minecart.getCurrentCartSpeedCapOnRail());
 		setMaxSpeedAirLateral(minecart.getMaxSpeedAirLateral());
@@ -145,19 +136,19 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 
 		this.id = id;
 		setFamily(family);
-		setCustomNameTag(label == null ? "" : label);
+		setCustomName(new StringTextComponent(label == null ? "" : label));
 
 		this.profile = profile;
 	}
 
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		dataManager.register(INSTANCE_SLOT, -1);
-		dataManager.register(SESSION_SLOT, -1);
-		dataManager.register(FAMILY_SLOT, (byte) 0);
-		dataManager.register(STATE_SLOT, (byte) 0);
-	}
+//	@Override
+//	protected void entityInit() {
+//		super.entityInit();
+//		dataManager.register(INSTANCE_SLOT, -1);
+//		dataManager.register(SESSION_SLOT, -1);
+//		dataManager.register(FAMILY_SLOT, (byte) 0);
+//		dataManager.register(STATE_SLOT, (byte) 0);
+//	}
 
 	private int getInstanceId() {
 		return dataManager.get(INSTANCE_SLOT);
@@ -188,8 +179,8 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 	}
 
 	@Override
-	public void onUpdate() {
-		super.onUpdate();
+	public void tick() {
+		super.tick();
 		if (getEntityWorld().isRemote) return;
 
 		ServerComputer computer = getServerComputer();
@@ -204,19 +195,19 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 		computer.keepAlive();
 
 		String label = computer.getLabel();
-		setCustomNameTag(label == null ? "" : label);
+		setCustomName(new StringTextComponent(label == null ? "" : label));
 
 		on = computer.isOn();
 
-		ComputerState state = ComputerState.Off;
+		ComputerState state = ComputerState.OFF;
 		if (computer.isCursorDisplayed()) {
-			state = ComputerState.Blinking;
+			state = ComputerState.BLINKING;
 		} else if (computer.isOn()) {
-			state = ComputerState.On;
+			state = ComputerState.ON;
 		}
 		setState(state);
 
-		WorldServer server = (WorldServer) getEntityWorld();
+		ServerWorld server = (ServerWorld) getEntityWorld();
 
 		int stackDirty = itemHandler.getDirty();
 		itemHandler.clearDirty();
@@ -251,24 +242,24 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 				if (stackChanged) message.setStack(itemHandler.getStackInSlot(slot));
 
 				// And send it to all players.
-				for (EntityPlayer player : server.getEntityTracker().getTrackingPlayers(this)) {
-					Plethora.network.sendTo(message, (EntityPlayerMP) player);
+				for (PlayerEntity player : server.getEntityTracker().getTrackingPlayers(this)) {
+					Plethora.network.sendTo(message, (PlayerEntity) player);
 				}
 			}
 		}
 	}
 
 	@Override
-	public boolean processInitialInteract(@Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
+	public boolean processInitialInteract(@Nonnull PlayerEntity player, @Nonnull EnumHand hand) {
 		if (MinecraftForge.EVENT_BUS.post(new MinecartInteractEvent(this, player, hand))) return true;
 
 		if (!getEntityWorld().isRemote) {
 			Matrix4f trans = getTranslationMatrix(1);
-			Vec3d from = new Vec3d(player.posX, player.posY + player.getEyeHeight(), player.posZ);
+			Vec3d from = new Vec3d(player.getPosX(), player.getPosY() + player.getEyeHeight(), player.getPosZ());
 			Vec3d look = player.getLook(1.0f);
 			double reach = 5;
-			if (player instanceof EntityPlayerMP) {
-				reach = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
+			if (player instanceof PlayerEntity) {
+				reach = player.getEntityAttribute(PlayerEntity.REACH_DISTANCE).getAttributeValue();
 			}
 			Vec3d to = new Vec3d(from.x + look.x * reach, from.y + look.y * reach, from.z + look.z * reach);
 
@@ -307,19 +298,19 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 	}
 
 	@Override
-	public void writeEntityToNBT(@Nonnull NBTTagCompound tag) {
+	public void writeEntityToNBT(@Nonnull CompoundNBT tag) {
 		super.writeEntityToNBT(tag);
 
-		tag.setInteger("computerId", id);
-		tag.setByte("family", (byte) getFamily().ordinal());
-		tag.setBoolean("on", startOn || on);
-		tag.setTag("items", itemHandler.serializeNBT());
+		tag.putInt("computerId", id);
+		tag.putByte("family", (byte) getFamily().ordinal());
+		tag.putBoolean("on", startOn || on);
+		tag.put("items", itemHandler.serializeNBT());
 
 		PlayerHelpers.writeProfile(tag, profile);
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound tag) {
+	protected void readEntityFromNBT(CompoundNBT tag) {
 		super.readEntityFromNBT(tag);
 
 		id = tag.getInteger("computerId");
@@ -367,7 +358,7 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 	}
 
 	@Nullable
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public ClientComputer getClientComputer() {
 		final ClientComputerRegistry manager = ComputerCraft.clientComputerRegistry;
 		int instanceId = getInstanceId();
@@ -402,7 +393,7 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 
 	@Nonnull
 	@Override
-	public IBlockState getDisplayTile() {
+	public BlockState getDisplayTile() {
 		switch (getFamily()) {
 			case Advanced:
 			case Normal:
@@ -435,14 +426,14 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 		}
 	}
 
-	public boolean isUsable(EntityPlayer player) {
+	public boolean isUsable(PlayerEntity player) {
 		if (isDead || player.getDistanceSq(this) > 64.0D) return false;
 
 		if (getFamily() != ComputerFamily.Command) return true;
 
 		if (getEntityWorld().isRemote) return true;
 
-		MinecraftServer server = player instanceof EntityPlayerMP ? ((EntityPlayerMP) player).server : null;
+		MinecraftServer server = player instanceof PlayerEntity ? ((PlayerEntity) player).server : null;
 		if (server == null || !server.isCommandBlockEnabled()) {
 			player.sendMessage(new TextComponentTranslation("advMode.notEnabled"));
 			return false;
@@ -459,12 +450,12 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 	@Nullable
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
 		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) itemHandler : super.getCapability(capability, facing);
 	}
 
 	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
 		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
 	}
 
@@ -476,9 +467,9 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 		float oy = (((float) (id >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 		float oz = (((float) (id >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 
-		double x = lastTickPosX + (posX - lastTickPosX) * partialTicks;
-		double y = lastTickPosY + (posY - lastTickPosY) * partialTicks;
-		double z = lastTickPosZ + (posZ - lastTickPosZ) * partialTicks;
+		double x = lastTickPosX + (getPosX() - lastTickPosX) * partialTicks;
+		double y = lastTickPosY + (getPosY() - lastTickPosY) * partialTicks;
+		double z = lastTickPosZ + (getPosZ() - lastTickPosZ) * partialTicks;
 		float pitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * partialTicks;
 		float yaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * partialTicks;
 
@@ -582,7 +573,7 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 
 	@SubscribeEvent
 	public static void onEntityInteraction(PlayerInteractEvent.EntityInteract event) {
-		EntityPlayer player = event.getEntityPlayer();
+		PlayerEntity player = event.PlayerEntity();
 
 		ItemStack stack = event.getItemStack();
 		if (stack.isEmpty()) return;
@@ -624,19 +615,19 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 			EntityMinecartComputer minecart = (EntityMinecartComputer) entity;
 			for (int slot = 0; slot < SLOTS; slot++) {
 				ItemStack stack = minecart.itemHandler.getStackInSlot(slot);
-				NBTTagCompound tag = minecart.accesses[slot].compound;
+				CompoundNBT tag = minecart.accesses[slot].compound;
 				if (!stack.isEmpty() || tag != null) {
 					MessageMinecartSlot message = new MessageMinecartSlot(minecart, slot);
 					message.setStack(stack);
 					message.setTag(tag);
-					Plethora.network.sendTo(message, (EntityPlayerMP) event.getEntityPlayer());
+					Plethora.network.sendTo(message, (PlayerEntity) event.PlayerEntity());
 				}
 			}
 		}
 	}
 
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public static void drawHighlight(DrawBlockHighlightEvent event) {
 		if (event.getTarget().typeOfHit != RayTraceResult.Type.ENTITY) return;
 		if (!(event.getTarget().entityHit instanceof EntityMinecartComputer)) return;
@@ -656,8 +647,8 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 		Vec3d from = player.getPositionEyes(partialTicks);
 		Vec3d look = player.getLook(partialTicks);
 		double reach = 5;
-		if (player instanceof EntityPlayerMP) {
-			reach = ((EntityPlayerMP) player).getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
+		if (player instanceof PlayerEntity) {
+			reach = ((PlayerEntity) player).getEntityAttribute(PlayerEntity.REACH_DISTANCE).getAttributeValue();
 		}
 		Vec3d to = new Vec3d(from.x + look.x * reach, from.y + look.y * reach, from.z + look.z * reach);
 
@@ -665,9 +656,9 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 
 		// Shift everything back to be relative to the player
 		GlStateManager.translate(
-			-(player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks),
-			-(player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks),
-			-(player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks)
+			-(player.lastTickPosX + (player.getPosX() - player.lastTickPosX) * partialTicks),
+			-(player.lastTickPosY + (player.getPosY() - player.lastTickPosY) * partialTicks),
+			-(player.lastTickPosZ + (player.getPosZ() - player.lastTickPosZ) * partialTicks)
 		);
 
 		ForgeHooksClient.multiplyCurrentGlMatrix(trans);
@@ -735,25 +726,25 @@ public class EntityMinecartComputer extends EntityMinecart implements IPlayerOwn
 	}
 
 	static final class VehicleAccess implements IVehicleAccess {
-		private final EntityMinecart minecart;
-		NBTTagCompound compound;
+		private final MinecartEntity minecart;
+		CompoundNBT compound;
 		boolean dirty = false;
 
-		private VehicleAccess(EntityMinecart minecart) {
+		private VehicleAccess(MinecartEntity minecart) {
 			this.minecart = minecart;
 		}
 
 		@Nonnull
 		@Override
-		public EntityMinecart getVehicle() {
+		public MinecartEntity getVehicle() {
 			return minecart;
 		}
 
 		@Nonnull
 		@Override
-		public NBTTagCompound getData() {
-			NBTTagCompound tag = compound;
-			if (tag == null) tag = compound = new NBTTagCompound();
+		public CompoundNBT getData() {
+			CompoundNBT tag = compound;
+			if (tag == null) tag = compound = new CompoundNBT();
 			return tag;
 		}
 

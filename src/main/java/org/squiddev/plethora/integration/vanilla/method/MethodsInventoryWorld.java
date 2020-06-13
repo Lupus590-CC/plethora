@@ -4,7 +4,7 @@ import dan200.computercraft.api.lua.LuaException;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -32,7 +32,7 @@ public final class MethodsInventoryWorld {
 	@PlethoraMethod(doc = "-- Drop an item on the ground. Returns the number of items dropped")
 	public static int drop(
 		@FromTarget IItemHandler handler, @FromContext(ContextKeys.ORIGIN) IWorldLocation location,
-		int slot, @Optional(defInt = Integer.MAX_VALUE) int limit, @Optional EnumFacing direction
+		int slot, @Optional(defInt = Integer.MAX_VALUE) int limit, @Optional Direction direction
 	) throws LuaException {
 		if (limit <= 0) throw new LuaException("Limit must be > 0");
 		assertBetween(slot, 1, handler.getSlots(), "Slot out of range (%s)");
@@ -44,7 +44,7 @@ public final class MethodsInventoryWorld {
 	@PlethoraMethod(doc = "-- Drop an item on the ground. Returns the number of items dropped")
 	public static int drop(
 		@FromTarget ItemSlot slot, @FromContext(ContextKeys.ORIGIN) IWorldLocation location,
-		@Optional(defInt = Integer.MAX_VALUE) int limit, @Optional EnumFacing direction
+		@Optional(defInt = Integer.MAX_VALUE) int limit, @Optional Direction direction
 	) throws LuaException {
 		if (limit <= 0) throw new LuaException("Limit must be > 0");
 
@@ -52,7 +52,7 @@ public final class MethodsInventoryWorld {
 		return dropItem(location, stack, direction);
 	}
 
-	private static int dropItem(IWorldLocation location, @Nonnull ItemStack stack, EnumFacing direction) {
+	private static int dropItem(IWorldLocation location, @Nonnull ItemStack stack, Direction direction) {
 		if (stack.isEmpty()) return 0;
 
 		World world = location.getWorld();

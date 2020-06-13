@@ -11,7 +11,7 @@ import hellfirepvp.astralsorcery.common.data.research.ResearchProgression;
 import hellfirepvp.astralsorcery.common.data.world.data.GatewayCache;
 import hellfirepvp.astralsorcery.common.tile.TileCelestialGateway;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
 import org.squiddev.plethora.api.meta.TypedMeta;
 import org.squiddev.plethora.api.method.IContext;
 import org.squiddev.plethora.api.method.wrapper.FromSubtarget;

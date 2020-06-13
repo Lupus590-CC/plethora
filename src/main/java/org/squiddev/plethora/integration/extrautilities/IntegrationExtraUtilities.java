@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import org.squiddev.plethora.api.IWorldLocation;
 import org.squiddev.plethora.api.Injects;
@@ -28,10 +28,10 @@ public final class IntegrationExtraUtilities {
 		@Nullable
 		@Override
 		protected Entity spawn(@Nonnull ItemStack stack, @Nonnull ItemGoldenLasso item, @Nonnull IWorldLocation location) {
-			NBTTagCompound tag = stack.getTagCompound();
+			CompoundNBT tag = stack.getTagCompound();
 			if (tag == null || !tag.hasKey(NBT_ANIMAL, Constants.NBT.TAG_COMPOUND)) return null;
 
-			NBTTagCompound entityData = tag.getCompoundTag(NBT_ANIMAL);
+			CompoundNBT entityData = tag.getCompoundTag(NBT_ANIMAL);
 			if (!entityData.hasKey("id", Constants.NBT.TAG_STRING)) return null;
 
 			return EntityList.createEntityFromNBT(entityData, location.getWorld());

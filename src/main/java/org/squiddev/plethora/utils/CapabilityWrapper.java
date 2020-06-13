@@ -1,6 +1,6 @@
 package org.squiddev.plethora.utils;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
@@ -12,21 +12,21 @@ import javax.annotation.Nullable;
  */
 public final class CapabilityWrapper implements ICapabilityProvider {
 	private final ICapabilityProvider child;
-	private final EnumFacing side;
+	private final Direction side;
 
-	public CapabilityWrapper(ICapabilityProvider child, EnumFacing side) {
+	public CapabilityWrapper(ICapabilityProvider child, Direction side) {
 		this.child = child;
 		this.side = side;
 	}
 
 	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
 		return (facing == null || facing == side) && child.hasCapability(capability, side);
 	}
 
 	@Nullable
 	@Override
-	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
 		return facing == null || facing == side ? child.getCapability(capability, side) : null;
 	}
 

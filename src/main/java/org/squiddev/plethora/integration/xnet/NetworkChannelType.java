@@ -7,7 +7,7 @@ import mcjty.xnet.api.channels.IChannelType;
 import mcjty.xnet.api.channels.IConnectorSettings;
 import mcjty.xnet.api.gui.IndicatorIcon;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -39,14 +39,14 @@ class NetworkChannelType implements IChannelType {
 	}
 
 	@Override
-	public boolean supportsBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nullable EnumFacing side) {
+	public boolean supportsBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nullable Direction side) {
 		TileEntity tile = world.getTileEntity(pos);
 		return tile != null && WIRED_ELEMENT != null && tile.hasCapability(WIRED_ELEMENT, side);
 	}
 
 	@Nonnull
 	@Override
-	public IConnectorSettings createConnector(@Nonnull EnumFacing side) {
+	public IConnectorSettings createConnector(@Nonnull Direction side) {
 		return new NetworkConnectorSettings(side);
 	}
 

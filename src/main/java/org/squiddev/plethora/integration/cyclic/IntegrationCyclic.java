@@ -7,7 +7,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -32,7 +32,7 @@ public final class IntegrationCyclic {
 		@Nullable
 		@Override
 		protected Entity spawn(@Nonnull ItemStack stack, @Nonnull ItemProjectileMagicNet item, @Nonnull IWorldLocation location) {
-			NBTTagCompound entityData = stack.getTagCompound();
+			CompoundNBT entityData = stack.getTagCompound();
 			if (entityData == null || !entityData.hasKey(NBT_ENTITYID, Constants.NBT.TAG_STRING)) return null;
 			return EntityList.createEntityFromNBT(entityData, location.getWorld());
 		}
@@ -50,7 +50,7 @@ public final class IntegrationCyclic {
 			if (!(item instanceof ItemProjectileMagicNet)) return null;
 
 			ItemStack stack = new ItemStack(item);
-			NBTTagCompound tag = new NBTTagCompound();
+			CompoundNBT tag = new CompoundNBT();
 			Entity entity = new EntitySquid(WorldDummy.INSTANCE);
 			entity.writeToNBT(tag);
 			tag.setString(NBT_ENTITYID, EntityList.getKey(entity.getClass()).toString());

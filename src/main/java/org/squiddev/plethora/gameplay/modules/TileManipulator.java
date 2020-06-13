@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -32,7 +32,7 @@ public final class TileManipulator extends TileBase implements ITickable, IPlaye
 	private GameProfile profile;
 	private int stackHash;
 
-	private final Map<ResourceLocation, NBTTagCompound> moduleData = new HashMap<>();
+	private final Map<ResourceLocation, CompoundNBT> moduleData = new HashMap<>();
 
 	private final TaskRunner runner = new TaskRunner();
 
@@ -58,11 +58,11 @@ public final class TileManipulator extends TileBase implements ITickable, IPlaye
 		return type;
 	}
 
-	public EnumFacing getFacing() {
+	public Direction getFacing() {
 		IBlockState state = getWorld().getBlockState(getPos());
 		return state.getBlock() == Registration.blockManipulator
 			? state.getValue(BlockManipulator.FACING)
-			: EnumFacing.DOWN;
+			: Direction.DOWN;
 	}
 
 	@Nonnull
@@ -74,9 +74,9 @@ public final class TileManipulator extends TileBase implements ITickable, IPlaye
 		return stackHash;
 	}
 
-	public NBTTagCompound getModuleData(ResourceLocation location) {
-		NBTTagCompound tag = moduleData.get(location);
-		if (tag == null) moduleData.put(location, tag = new NBTTagCompound());
+	public CompoundNBT getModuleData(ResourceLocation location) {
+		CompoundNBT tag = moduleData.get(location);
+		if (tag == null) moduleData.put(location, tag = new CompoundNBT());
 		return tag;
 	}
 
@@ -89,21 +89,21 @@ public final class TileManipulator extends TileBase implements ITickable, IPlaye
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag) {
+	public void readFromNBT(CompoundNBT tag) {
 		super.readFromNBT(tag);
 		readDescription(tag);
 	}
 
 	@Nonnull
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+	public CompoundNBT writeToNBT(CompoundNBT tag) {
 		tag = super.writeToNBT(tag);
 		writeDescription(tag);
 		return tag;
 	}
 
 	@Override
-	protected void writeDescription(NBTTagCompound tag) {
+	protected void writeDescription(CompoundNBT tag) {
 		tag.setInteger("type", type.ordinal());
 		for (int i = 0; i < stacks.size(); i++) {
 			ItemStack stack = stacks.get(i);
@@ -117,15 +117,15 @@ public final class TileManipulator extends TileBase implements ITickable, IPlaye
 		if (moduleData.isEmpty()) {
 			tag.removeTag("data");
 		} else {
-			NBTTagCompound data = tag.getCompoundTag("data");
-			for (Map.Entry<ResourceLocation, NBTTagCompound> entry : moduleData.entrySet()) {
+			CompoundNBT data = tag.getCompoundTag("data");
+			for (Map.Entry<ResourceLocation, CompoundNBT> entry : moduleData.entrySet()) {
 				data.setTag(entry.getKey().toString(), entry.getValue());
 			}
 		}
 	}
 
 	@Override
-	protected void readDescription(NBTTagCompound tag) {
+	protected void readDescription(CompoundNBT tag) {
 		if (tag.hasKey("type") && type == null) {
 			int meta = tag.getInteger("type");
 			setType(VALUES[meta & 1]);
@@ -139,14 +139,14 @@ public final class TileManipulator extends TileBase implements ITickable, IPlaye
 
 		stackHash = Helpers.hashStacks(stacks);
 
-		NBTTagCompound data = tag.getCompoundTag("data");
+		CompoundNBT data = tag.getCompoundTag("data");
 		for (String key : data.getKeySet()) {
 			moduleData.put(new ResourceLocation(key), data.getCompoundTag(key));
 		}
 	}
 
 	@Override
-	public boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, Vec3d hit) {
+	public boolean onActivated(EntityPlayer player, EnumHand hand, Direction side, Vec3d hit) {
 		if (player.getEntityWorld().isRemote) return true;
 
 		if (type == null) {

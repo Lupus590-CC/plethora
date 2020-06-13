@@ -3,7 +3,7 @@ package org.squiddev.plethora.core;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.Constants;
@@ -62,7 +62,7 @@ public final class MethodRegistry implements IMethodRegistry {
 
 	@Nonnull
 	@Override
-	public ICostHandler getCostHandler(@Nonnull ICapabilityProvider object, @Nullable EnumFacing side) {
+	public ICostHandler getCostHandler(@Nonnull ICapabilityProvider object, @Nullable Direction side) {
 		Objects.requireNonNull(object, "object cannot be null");
 		ICostHandler handler = object.getCapability(Constants.COST_HANDLER_CAPABILITY, side);
 		return handler != null ? handler : DefaultCostHandler.get(object);

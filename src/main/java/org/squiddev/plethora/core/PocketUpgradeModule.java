@@ -7,7 +7,7 @@ import dan200.computercraft.api.pocket.IPocketAccess;
 import dan200.computercraft.api.pocket.IPocketUpgrade;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -206,7 +206,7 @@ class PocketUpgradeModule implements IPocketUpgrade {
 
 		@Nonnull
 		@Override
-		public NBTTagCompound getData() {
+		public CompoundNBT getData() {
 			return access.getUpgradeNBTData();
 		}
 

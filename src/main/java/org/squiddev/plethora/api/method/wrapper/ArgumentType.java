@@ -2,6 +2,7 @@ package org.squiddev.plethora.api.method.wrapper;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.lua.ObjectArguments;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 
 import javax.annotation.Nonnull;
@@ -38,7 +39,7 @@ public interface ArgumentType<T> {
 	 * @throws LuaException If the value is not valid, or was not provided at all.
 	 */
 	@Nonnull
-	T get(@Nonnull Object[] args, int index) throws LuaException;
+	T get(@Nonnull ObjectArguments args, int index) throws LuaException;
 
 	/**
 	 * Attempt to extract this type from the given argument list if present.
@@ -49,8 +50,8 @@ public interface ArgumentType<T> {
 	 * @throws LuaException If the value is not valid.
 	 */
 	@Nullable
-	default T opt(@Nonnull Object[] args, int index) throws LuaException {
-		return index < args.length && args[index] != null ? get(args, index) : null;
+	default T opt(@Nonnull ObjectArguments args, int index) throws LuaException {
+		return index < args.count() && args.get(index) != null ? get(args, index) : null;
 	}
 
 	/**
@@ -72,13 +73,13 @@ public interface ArgumentType<T> {
 
 			@Nonnull
 			@Override
-			public U get(@Nonnull Object[] args, int index) throws LuaException {
+			public U get(@Nonnull ObjectArguments args, int index) throws LuaException {
 				return func.apply(original.get(args, index));
 			}
 
 			@Nullable
 			@Override
-			public U opt(@Nonnull Object[] args, int index) throws LuaException {
+			public U opt(@Nonnull ObjectArguments args, int index) throws LuaException {
 				T result = original.opt(args, index);
 				return result == null ? null : func.apply(result);
 			}

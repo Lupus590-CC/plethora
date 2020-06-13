@@ -4,13 +4,13 @@ import com.mojang.authlib.GameProfile;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.*;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.IPlayerOwnable;
 import org.squiddev.plethora.api.IWorldLocation;
@@ -122,13 +122,13 @@ public class TurtleUpgradeModule implements ITurtleUpgrade {
 
 	@Nonnull
 	@Override
-	public TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull EnumFacing direction) {
+	public TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction) {
 		return TurtleCommandResult.failure("Cannot use tool");
 	}
 
 	@Nonnull
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public Pair<IBakedModel, Matrix4f> getModel(ITurtleAccess turtle, @Nonnull TurtleSide side) {
 		float xOffset = side == TurtleSide.Left ? -0.40625f : 0.40625f;
 		Matrix4f transform = new Matrix4f(
@@ -203,7 +203,7 @@ public class TurtleUpgradeModule implements ITurtleUpgrade {
 
 		@Nonnull
 		@Override
-		public NBTTagCompound getData() {
+		public CompoundNBT getData() {
 			return access.getUpgradeNBTData(side);
 		}
 

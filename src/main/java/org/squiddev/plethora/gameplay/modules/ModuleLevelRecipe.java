@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -37,8 +37,8 @@ public final class ModuleLevelRecipe extends ShapelessRecipes {
 
 			ItemStack result = stack.copy();
 			result.setCount(1);
-			NBTTagCompound tag = result.getTagCompound();
-			if (tag == null) result.setTagCompound(tag = new NBTTagCompound());
+			CompoundNBT tag = result.getTagCompound();
+			if (tag == null) result.setTagCompound(tag = new CompoundNBT());
 			tag.setInteger("level", tag.hasKey("level", Constants.NBT.TAG_ANY_NUMERIC) ? tag.getInteger("level") + 1 : 1);
 			return result;
 		}

@@ -9,11 +9,11 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -24,8 +24,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.Constants;
 import org.squiddev.plethora.api.IWorldLocation;
@@ -63,7 +63,7 @@ public final class BlockManipulator extends BlockBase<TileManipulator> implement
 
 	static {
 		AxisAlignedBB box = new AxisAlignedBB(0, 0, 0, 1, (float) OFFSET, 1);
-		for (EnumFacing facing : EnumFacing.VALUES) {
+		for (Direction facing : Direction.VALUES) {
 			BOXES[facing.ordinal()] = MatrixHelpers.transform(box, MatrixHelpers.matrixFor(facing));
 		}
 	}
@@ -85,7 +85,7 @@ public final class BlockManipulator extends BlockBase<TileManipulator> implement
 	@Deprecated
 	public RayTraceResult collisionRayTrace(IBlockState blockState, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Vec3d start, @Nonnull Vec3d end) {
 		ManipulatorType type = blockState.getValue(TYPE);
-		EnumFacing facing = blockState.getValue(FACING);
+		Direction facing = blockState.getValue(FACING);
 
 		Vec3d startOff = start.subtract(pos.getX(), pos.getY(), pos.getZ());
 		Vec3d endOff = end.subtract(pos.getX(), pos.getY(), pos.getZ());
@@ -121,7 +121,7 @@ public final class BlockManipulator extends BlockBase<TileManipulator> implement
 	@Deprecated
 	public IBlockState getStateFromMeta(int meta) {
 		ManipulatorType type = VALUES[meta & 1];
-		EnumFacing facing = (meta >> 1) <= 6 ? EnumFacing.VALUES[meta >> 1] : EnumFacing.DOWN;
+		Direction facing = (meta >> 1) <= 6 ? Direction.VALUES[meta >> 1] : Direction.DOWN;
 
 		return super.getStateFromMeta(meta).withProperty(TYPE, type).withProperty(FACING, facing);
 	}
@@ -133,12 +133,12 @@ public final class BlockManipulator extends BlockBase<TileManipulator> implement
 
 	@Override
 	@Deprecated
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer) {
 		return getStateFromMeta(meta).withProperty(FACING, facing.getOpposite());
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, LivingEntity placer, ItemStack stack) {
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 
 		TileEntity te = world.getTileEntity(pos);
@@ -183,12 +183,12 @@ public final class BlockManipulator extends BlockBase<TileManipulator> implement
 
 	@Override
 	@Deprecated
-	public boolean isSideSolid(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side) {
+	public boolean isSideSolid(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, Direction side) {
 		return state.getValue(FACING) == side;
 	}
 
 	@Override
-	public IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos blockPos, @Nonnull EnumFacing enumFacing) {
+	public IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos blockPos, @Nonnull Direction direction) {
 		final TileEntity te = world.getTileEntity(blockPos);
 		if (!(te instanceof TileManipulator)) return null;
 		final TileManipulator manipulator = (TileManipulator) te;
@@ -279,7 +279,7 @@ public final class BlockManipulator extends BlockBase<TileManipulator> implement
 		return peripheral;
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public void drawHighlight(DrawBlockHighlightEvent event) {
 		if (event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK) return;
@@ -289,7 +289,7 @@ public final class BlockManipulator extends BlockBase<TileManipulator> implement
 		IBlockState state = event.getPlayer().getEntityWorld().getBlockState(blockPos);
 		if (state.getBlock() != this) return;
 
-		EnumFacing facing = state.getValue(FACING);
+		Direction facing = state.getValue(FACING);
 
 		Vec3d hit = event.getTarget().hitVec.subtract(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 		ManipulatorType type = state.getValue(TYPE);
@@ -337,7 +337,7 @@ public final class BlockManipulator extends BlockBase<TileManipulator> implement
 
 		@Nonnull
 		@Override
-		public NBTTagCompound getData() {
+		public CompoundNBT getData() {
 			return tile.getModuleData(module);
 		}
 

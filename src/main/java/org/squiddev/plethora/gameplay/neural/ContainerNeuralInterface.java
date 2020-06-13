@@ -2,7 +2,7 @@ package org.squiddev.plethora.gameplay.neural;
 
 import dan200.computercraft.shared.computer.core.IComputer;
 import dan200.computercraft.shared.computer.core.IContainerComputer;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -38,12 +38,12 @@ public class ContainerNeuralInterface extends Container implements IContainerCom
 	public static final Vec2i SWAP = new Vec2i(NEURAL_START_X + 1 + 2 * S, START_Y + 1 + 2 * S);
 
 	private final ItemStack stack;
-	private final EntityLivingBase parent;
+	private final LivingEntity parent;
 
 	public final Slot[] peripheralSlots;
 	public final Slot[] moduleSlots;
 
-	public ContainerNeuralInterface(IInventory playerInventory, EntityLivingBase parent, ItemStack stack) {
+	public ContainerNeuralInterface(IInventory playerInventory, LivingEntity parent, ItemStack stack) {
 		this.stack = stack;
 		this.parent = parent;
 

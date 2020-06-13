@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionType;
@@ -107,9 +107,9 @@ public final class MetaItems {
 			if (entity == null) return null;
 
 			if (stack.hasDisplayName()) entity.setCustomNameTag(stack.getDisplayName());
-			NBTTagCompound stackTag = stack.getTagCompound();
+			CompoundNBT stackTag = stack.getTagCompound();
 			if (!entity.ignoreItemEntityData() && stackTag != null && stackTag.hasKey("EntityTag", Constants.NBT.TAG_COMPOUND)) {
-				NBTTagCompound entityData = entity.writeToNBT(new NBTTagCompound());
+				CompoundNBT entityData = entity.writeToNBT(new CompoundNBT());
 				UUID uuid = entity.getUniqueID();
 				entityData.merge(stackTag.getCompoundTag("EntityTag"));
 				entity.setUniqueId(uuid);

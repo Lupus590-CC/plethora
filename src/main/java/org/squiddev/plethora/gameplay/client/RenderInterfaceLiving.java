@@ -7,13 +7,13 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.*;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.squiddev.plethora.gameplay.Plethora;
 
 import static org.squiddev.plethora.gameplay.client.ModelInterface.getMonocle;
@@ -93,19 +93,19 @@ public final class RenderInterfaceLiving {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	private static void inject(Class<? extends EntityLivingBase> klass, float dx, float dy, float dz) {
+	@OnlyIn(Dist.CLIENT)
+	private static void inject(Class<? extends LivingEntity> klass, float dx, float dy, float dz) {
 		RenderManager manager = Minecraft.getMinecraft().getRenderManager();
 		inject(manager.getEntityClassRenderObject(klass), getNormal(), dx, dy, dz, 0, 0, 0);
 	}
 
-	@SideOnly(Side.CLIENT)
-	private static void injectMonocle(Class<? extends EntityLivingBase> klass, float dx, float dy, float dz, float rx, float ry, float rz) {
+	@OnlyIn(Dist.CLIENT)
+	private static void injectMonocle(Class<? extends LivingEntity> klass, float dx, float dy, float dz, float rx, float ry, float rz) {
 		RenderManager manager = Minecraft.getMinecraft().getRenderManager();
 		inject(manager.getEntityClassRenderObject(klass), getMonocle(), dx, dy, dz, rx, ry, rz);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	private static void inject(Render<?> render, ModelInterface iface, float dx, float dy, float dz, float rx, float ry, float rz) {
 		if (render instanceof RenderLiving<?>) {
 			RenderLiving<?> living = (RenderLiving) render;
@@ -120,7 +120,7 @@ public final class RenderInterfaceLiving {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	private static ModelRenderer getHead(ModelBase model) {
 		if (model instanceof ModelQuadruped) {
 			return ((ModelQuadruped) model).head;

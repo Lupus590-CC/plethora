@@ -7,7 +7,7 @@ import com.timwoodcreates.roost.data.DataChickenModded;
 import com.timwoodcreates.roost.data.DataChickenVanilla;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fml.common.Loader;
 import org.squiddev.plethora.api.Injects;
 import org.squiddev.plethora.api.converter.ConstantConverter;
@@ -55,7 +55,7 @@ public final class IntegrationRoost {
 		@Override
 		public Map<String, ?> getMeta(@Nonnull DataChickenVanilla context) {
 			Map<Object, Object> out = new HashMap<>(2);
-			NBTTagCompound nbt = context.buildChickenStack().getTagCompound();
+			CompoundNBT nbt = context.buildChickenStack().getTagCompound();
 
 			out.put("name", context.getName());
 
@@ -80,7 +80,7 @@ public final class IntegrationRoost {
 		@Nonnull
 		@Override
 		public Map<String, ?> getMeta(@Nonnull DataChickenModded context) {
-			NBTTagCompound nbt = context.buildChickenStack().getTagCompound();
+			CompoundNBT nbt = context.buildChickenStack().getTagCompound();
 			if (nbt == null) {
 				return Collections.singletonMap("roost", Collections.singletonMap("name", context.getName()));
 			}

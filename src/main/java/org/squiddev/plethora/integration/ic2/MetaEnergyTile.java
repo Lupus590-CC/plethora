@@ -3,7 +3,7 @@ package org.squiddev.plethora.integration.ic2;
 import ic2.api.energy.prefab.BasicSinkSource;
 import ic2.api.energy.tile.*;
 import ic2.core.IC2;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import org.squiddev.plethora.api.Injects;
 import org.squiddev.plethora.api.meta.BasicMetaProvider;
@@ -53,12 +53,12 @@ public final class MetaEnergyTile extends BasicMetaProvider<IEnergyTile> {
 	public IEnergyTile getExample() {
 		return new BasicSinkSource(WorldDummy.INSTANCE, BlockPos.ORIGIN, 1000, 3, 2) {
 			@Override
-			public boolean emitsEnergyTo(IEnergyAcceptor iEnergyAcceptor, EnumFacing enumFacing) {
+			public boolean emitsEnergyTo(IEnergyAcceptor iEnergyAcceptor, Direction direction) {
 				return true;
 			}
 
 			@Override
-			public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing enumFacing) {
+			public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, Direction direction) {
 				return true;
 			}
 		};

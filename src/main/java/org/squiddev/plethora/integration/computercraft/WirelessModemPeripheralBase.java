@@ -4,16 +4,16 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.peripheral.modem.ModemPeripheral;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
 import dan200.computercraft.shared.peripheral.modem.wireless.WirelessModemPeripheral;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.IPeripheralHandler;
 import org.squiddev.plethora.api.vehicle.IVehicleAccess;
@@ -73,15 +73,15 @@ public abstract class WirelessModemPeripheralBase extends WirelessModemPeriphera
 		}
 
 		@Override
-		public void update(@Nonnull World world, @Nonnull Vec3d position, @Nullable EntityLivingBase entity) {
+		public void update(@Nonnull World world, @Nonnull Vec3d position, @Nullable LivingEntity entity) {
 			update(world, position);
 		}
 	}
 
 	public static final class VehicleUpgradeHandler extends WirelessModemPeripheralBase implements IVehicleUpgradeHandler {
-		@SideOnly(Side.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		private ModelResourceLocation offModel;
-		@SideOnly(Side.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		private ModelResourceLocation onModel;
 
 		private final ItemStack stack;
@@ -117,7 +117,7 @@ public abstract class WirelessModemPeripheralBase extends WirelessModemPeriphera
 
 		@Nonnull
 		@Override
-		@SideOnly(Side.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		public Pair<IBakedModel, Matrix4f> getModel(@Nonnull IVehicleAccess access) {
 			loadModelLocations();
 			boolean active = access.getData().getBoolean("active");
@@ -126,7 +126,7 @@ public abstract class WirelessModemPeripheralBase extends WirelessModemPeriphera
 			return Pair.of(modelManager.getModel(active ? onModel : offModel), RenderHelpers.getIdentity());
 		}
 
-		@SideOnly(Side.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		private void loadModelLocations() {
 			if (offModel != null) return;
 

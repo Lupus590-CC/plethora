@@ -5,9 +5,9 @@ import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import org.squiddev.plethora.gameplay.Plethora;
 import org.squiddev.plethora.utils.TinySlot;
 
@@ -32,8 +32,8 @@ public final class ItemComputerHandler {
 	private ItemComputerHandler() {
 	}
 
-	public static NeuralComputer getServer(@Nonnull ItemStack stack, EntityLivingBase owner, TinySlot inventory) {
-		NBTTagCompound tag = getTag(stack);
+	public static NeuralComputer getServer(@Nonnull ItemStack stack, LivingEntity owner, TinySlot inventory) {
+		CompoundNBT tag = getTag(stack);
 
 		final ServerComputerRegistry manager = ComputerCraft.serverComputerRegistry;
 		final int sessionId = manager.getSessionID();
@@ -75,7 +75,7 @@ public final class ItemComputerHandler {
 
 
 	public static NeuralComputer tryGetServer(@Nonnull ItemStack stack) {
-		NBTTagCompound tag = getTag(stack);
+		CompoundNBT tag = getTag(stack);
 
 		final ServerComputerRegistry manager = ComputerCraft.serverComputerRegistry;
 		final int sessionId = manager.getSessionID();
@@ -94,7 +94,7 @@ public final class ItemComputerHandler {
 	}
 
 	public static ClientComputer getClient(@Nonnull ItemStack stack) {
-		NBTTagCompound tag = getTag(stack);
+		CompoundNBT tag = getTag(stack);
 		int instanceId = tag.getInteger(INSTANCE_ID);
 		if (instanceId < 0) return null;
 

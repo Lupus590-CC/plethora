@@ -4,13 +4,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.init.MobEffects;
 import org.squiddev.plethora.gameplay.neural.NeuralHelpers;
 
 import javax.annotation.Nonnull;
 
-public class LayerInterface implements LayerRenderer<EntityLivingBase> {
+public class LayerInterface implements LayerRenderer<LivingEntity> {
 	private static final float PIXEL = 0.0625f;
 	private final ModelRenderer renderer;
 	private final ModelInterface iface;
@@ -36,7 +36,7 @@ public class LayerInterface implements LayerRenderer<EntityLivingBase> {
 	}
 
 	@Override
-	public void doRenderLayer(@Nonnull EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public void doRenderLayer(@Nonnull LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		if (NeuralHelpers.getSlot(entity) == null || entity.isPotionActive(MobEffects.INVISIBILITY)) {
 			return;
 		}

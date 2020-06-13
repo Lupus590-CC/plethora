@@ -1,6 +1,5 @@
 package org.squiddev.plethora.utils;
 
-import baubles.api.cap.IBaublesItemHandler;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
@@ -34,22 +33,6 @@ public class TinySlot {
 		@Override
 		public void markDirty() {
 			inventory.markDirty();
-		}
-	}
-
-	public static class BaublesSlot extends TinySlot {
-		private final IBaublesItemHandler handler;
-		private final int slot;
-
-		public BaublesSlot(@Nonnull ItemStack stack, @Nonnull IBaublesItemHandler handler, int slot) {
-			super(stack);
-			this.handler = handler;
-			this.slot = slot;
-		}
-
-		@Override
-		public void markDirty() {
-			handler.setChanged(slot, true);
 		}
 	}
 }

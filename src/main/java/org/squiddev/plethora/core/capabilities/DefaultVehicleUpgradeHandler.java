@@ -1,9 +1,9 @@
 package org.squiddev.plethora.core.capabilities;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.squiddev.plethora.api.vehicle.IVehicleAccess;
 import org.squiddev.plethora.api.vehicle.IVehicleUpgradeHandler;
@@ -18,7 +18,7 @@ import static org.squiddev.plethora.gameplay.client.RenderHelpers.getMesher;
 public class DefaultVehicleUpgradeHandler implements IVehicleUpgradeHandler {
 	@Nonnull
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public Pair<IBakedModel, Matrix4f> getModel(@Nonnull IVehicleAccess access) {
 		return Pair.of(getMesher().getModelManager().getMissingModel(), getIdentity());
 	}
